@@ -1,5 +1,6 @@
 CsRestClient
 ====
+jsonhttprpc
 
 __RestClientInterface__
 ```c#
