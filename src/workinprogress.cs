@@ -8,6 +8,9 @@ using System.Reflection.Emit;
 using System.Net;
 using System.IO;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
 namespace JsonRPC
 {
     [AttributeUsage(AttributeTargets.Interface)]
@@ -21,6 +24,19 @@ namespace JsonRPC
         }
     }
 
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    public class ByJson : Attribute
+    {
+    }
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    public class ByRequestUri : Attribute
+    {
+    }
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+    public class ByFormData : Attribute
+    {
+    }
+
     [AttributeUsage(AttributeTargets.Method)]
     public class HttpMethod : Attribute
     {
@@ -29,6 +45,8 @@ namespace JsonRPC
     public class Suffix : Attribute
     {
     }
+
+
 
     [Service("math")]
     public interface Sample
@@ -115,6 +133,13 @@ namespace JsonRPC
             {
                 Console.WriteLine(a);
             }
+
+            var dic = new Dictionary<string, object>();
+            foreach (var param in method.GetParameters())
+            {
+                dic[param.Name] = args[param.Position];
+            }
+            Console.WriteLine(JsonConvert.SerializeObject(dic));
 
             var uri = BuildURI(host, type, method, args);
             var req = HttpWebRequest.Create(uri);
