@@ -246,7 +246,7 @@ namespace JsonRPC
         static void Main(string[] args)
         {
             Console.WriteLine(
-                RemotePoint.Create<Sample>("http://wiki.nzincorp.com").Sum(1, 2));
+                RemotePoint.Create<Sample>("http://www.naver.com").Sum(1, 2));
         }
     }
 }
