@@ -1,7 +1,7 @@
 CsRestClient
 ====
 ![man](img/man.png)<br>
-Make Interfaces All The Things!
+Make Interface All The Things!
 
 __RestClientInterface__
 ```c#
