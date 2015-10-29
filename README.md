@@ -1,7 +1,7 @@
 CsRestClient
 ====
 ![man](img/man.png)<br>
-jsonhttprpc
+Make interface all things!
 
 __RestClientInterface__
 ```c#
