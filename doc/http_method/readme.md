@@ -27,6 +27,12 @@ class Users {
 }
 ```
 
-asdf | asdf | asdf
------|------|-----
-asdf | qwer | qq
+ HttpMethod | 접두사
+------      |-----
+ GET        | get
+            | query
+ POST       | create
+ PUT        | update
+            | apply
+ DELETE     | delete
+            | remove
