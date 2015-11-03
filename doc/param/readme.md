@@ -8,7 +8,7 @@ param 전달 타입 설정하기
 request_uri 타입
 ----
 파라미터가 __request_uri__에 추가되어 전달됩니다.
-<br>
+<br><br>
 __예제__
 ```c#
 void Foo([RequestUri]string name, [RequestUri]int level);
@@ -23,7 +23,7 @@ GET /foo?name=park&level=10 HTTP/1.1
 header 타입
 ----
 파라미터가 __http_header__에 추가되어 전달됩니다.
-<br>
+<br><br>
 __예제__
 ```c#
 void Foo([Header]string name, [Header]int level);
@@ -40,7 +40,7 @@ Level : 10
 suffix 타입
 ----
 파라미터가 __request_uri__에 접미사로 추가되어 전달됩니다. 이 경우 파라미터 자체의 네임은 무시되며, 왼쪽에 위치한 파라미터일수록 접미사에 먼저 추가됩니다.
-<br>
+<br><br>
 __예제__
 ```c#
 void Foo([Suffix]string name, [Suffix]int level);
@@ -55,7 +55,7 @@ GET /foo/park/10 HTTP/1.1
 post_json 타입
 ----
 파라미터가 __post__에 json 형식으로 추가되어 전달됩니다.
-<br>
+<br><br>
 __예제__
 ```c#
 void Foo([PostJson]string name, [PostJson]int level);
@@ -75,7 +75,7 @@ GET /foo HTTP/1.1
 혼합하여 사용하기
 ----
 모든 파라미터 타입은 혼용될 수 있습니다.
-<br>
+<br><br>
 __예제__
 ```c#
 void Foo([Suffix]string name, [RequestUri]int level);
@@ -94,7 +94,7 @@ GET /foo?level&=10 HTTP/1.1
 중복하여 사용하기
 ----
 한개의 파라미터에 두가지 이상의 속성을 적용할 수 있습니다.
-<br>
+<br><br>
 __예제__
 ```c#
 void Foo([PostJson][Header]string name, [PostJson][RequestUri]int level);
