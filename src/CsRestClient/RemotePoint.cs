@@ -201,7 +201,9 @@ namespace CsRestClient
 
                 typeBuilder.DefineMethodOverride(
                     methodBuilder,
-                    typeof(T).GetMethod(method.Name));
+                    typeof(T).GetMethod(
+                        method.Name,
+                        method.GetParameters().Select(m => m.ParameterType).ToArray()));
             }
 
             Type type = typeBuilder.CreateType();

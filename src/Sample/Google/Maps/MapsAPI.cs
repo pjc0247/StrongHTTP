@@ -20,6 +20,9 @@ namespace Sample.Google.Maps
 
         [Resource("json")]
         GeocodeResult ReverseGeocode([RequestUri]double lat, [RequestUri]double lng);
+
+        [Resource("json")]
+        GeocodeResult ReverseGeocodeWithPlaceId([RequestUri]string place_id);
     }
 
     public static class MapsAPIFactory

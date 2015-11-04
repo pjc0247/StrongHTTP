@@ -28,11 +28,14 @@ namespace Sample
             foreach (var p in processors2)
                 Console.WriteLine(p);
 
-            var api = Google.Maps.MapsAPIFactory.Create("YOUR_API_KEY_HERE");
+            var api = Google.Maps.MapsAPIFactory.Create("");
 
             Console.WriteLine(
                 api.ReverseGeocode(40.714224,-73.961452).results[0].formatted_address);
-                
+
+            Console.WriteLine(
+                api.ReverseGeocodeWithPlaceId("ChIJd8BlQ2BZwokRAFUEcm_qrcA").results[0].formatted_address);
+
             var github = Github.GithubAPIFactory.Create();
 
             Console.WriteLine(
