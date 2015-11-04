@@ -51,12 +51,12 @@ namespace CsRestClient
             this.parameterData = BuildParameterData();
 
             var processors = Assembly.GetEntryAssembly().GetTypes()
-                .Where(m => m.GetInterface(nameof(INameProcessor)) != null)
+                .Where(m => m.GetInterface(nameof(IParameterProcessor)) != null)
                 .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? false);
 
             foreach (var processor in processors)
             {
-                var p = (INameProcessor)Activator.CreateInstance(processor);
+                var p = (IParameterProcessor)Activator.CreateInstance(processor);
                 p.OnParameter(method, parameterData);    
             }
 

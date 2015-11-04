@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace CsRestClient
 {
-    public interface INameProcessor
+    public interface IParameterProcessor
     {
         void OnParameter(MethodInfo request, List<ParameterData> parameterData); 
     }
