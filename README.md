@@ -3,44 +3,24 @@ CsRestClient
 ![man](img/man.png)<br>
 Make Interface All The REST Requests!
 
-__RestClientInterface__
+Usage with Google.Maps.ReverseGeocoding API
+----
+[Full Sourcecode](https://github.com/pjc0247/CsRestClient/tree/master/src/Sample/Google/Maps)<br>
+[API Response](https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&)<br>
 ```c#
-public class MyStrangeClass {
-  public string name {get;set;}
-  public int level {get;set;}
-}
-```
-```c#
-public interface Math {
-  [Ret("result")]
-  int Sum(int a,int b);
-  
-  MyStrangeClass Foo();
-}
-```
-
-__Request__
-```c#
-var math = RemotePoint.Create<Math>(
-  "http://www.rinistudio.com");
-  
-// http://www.rinistudio.com/math/sum?a=5&b=5
-Console.WriteLine(math.Sum(5, 5)); // 10
-
-// http://www.rinistudio.com/math/foo
-math.Foo(); // name : hello, level : 10
-```
-
-__ApiServer__
-```json
+[Service("maps/api/geocode")]
+public interface MapsAPI
 {
-  "result" : 10
+    [Resource("json")]
+    ReverseGeocodeResult ReverseGeocode([RequestUri]string key, [RequestUri]double lat, [RequestUri]double lng);
 }
 ```
-```json
-{
-  "name" : "hello",
-  "level" : 5
+```c#
+var api = Google.Maps.MapsAPIFactory.Create();
+var response = api.ReverseGeocode("", 40.714224,-73.961452);
+
+foreach(var result in response.results) {
+  Console.WriteLine(result.formatted_address);
 }
 ```
 
