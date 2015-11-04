@@ -29,9 +29,9 @@ namespace CsRestClient
                 this.config = config;
         }
 
-        public static object RPCCall(string host, Type type, MethodInfo method, object[] args)
+        public static object RPCCall(object obj, string host, Type type, MethodInfo method, object[] args)
         {
-            var request = new HttpRequest(host, type, method, args);
+            var request = new HttpRequest(obj, host, type, method, args);
             var response = request.GetResponse();
 
             if (method.ReturnType == typeof(string))
@@ -65,18 +65,74 @@ namespace CsRestClient
                 null,
                 new Type[] { intf });
 
+            var meta = typeBuilder.DefineField(
+                "metaData", typeof(Dictionary<string, object>), FieldAttributes.Public);
+            ConstructorBuilder ctor =
+                typeBuilder.DefineConstructor(
+                    MethodAttributes.Public,
+                    CallingConventions.Standard,
+                    Type.EmptyTypes);
+            ILGenerator ilGen =
+                ctor.GetILGenerator();
+
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(OpCodes.Newobj,
+                typeof(Dictionary<string, object>).GetConstructor(new Type[] { }));
+            ilGen.Emit(OpCodes.Stfld, meta);
+            ilGen.Emit(OpCodes.Ret);
+
             return typeBuilder;
         }
 
-        private static MethodInfo m = null;
         public static T Create<T>(string host)
         {
             var typeBuilder = CreateType(typeof(T));
 
-            /* black magic */
-            foreach (var method in typeof(T).GetMethods())
+            foreach(var prop in typeof(T).GetProperties())
             {
-                m = method;
+                var meta = typeBuilder.DefineField(
+                    "_" + prop.Name, prop.PropertyType, FieldAttributes.Public);
+
+                var methodBuilder = typeBuilder.DefineMethod(
+                    "get_" + prop.Name,
+                    MethodAttributes.Public |
+                    MethodAttributes.Virtual |
+                    MethodAttributes.NewSlot |
+                    MethodAttributes.HideBySig |
+                    MethodAttributes.SpecialName |
+                    MethodAttributes.Final,
+                    prop.PropertyType,
+                    null);
+                var ilGen = methodBuilder.GetILGenerator();
+
+                ilGen.EmitWriteLine("A");
+                ilGen.Emit(OpCodes.Ldarg_0);
+                ilGen.Emit(OpCodes.Ldfld, meta);
+                ilGen.Emit(OpCodes.Ret);
+
+                methodBuilder = typeBuilder.DefineMethod(
+                    "set_" + prop.Name,
+                    MethodAttributes.Public |
+                    MethodAttributes.Virtual |
+                    MethodAttributes.NewSlot |
+                    MethodAttributes.HideBySig |
+                    MethodAttributes.SpecialName |
+                    MethodAttributes.Final,
+                    null,
+                    new Type[] { prop.PropertyType  });
+                ilGen = methodBuilder.GetILGenerator();
+
+                ilGen.EmitWriteLine("A");
+                ilGen.Emit(OpCodes.Ldarg_0);
+                ilGen.Emit(OpCodes.Ldarg_1);
+                ilGen.Emit(OpCodes.Stfld, meta);
+                ilGen.Emit(OpCodes.Ret);
+            }
+
+            /* black magic */
+            var methods = typeof(T).GetMethods().Where(m => m.IsSpecialName == false);
+            foreach (var method in methods)
+            {
                 var paramTypes =
                     method.GetParameters().Select(m => m.ParameterType).ToArray();
                 var methodBuilder = typeBuilder.DefineMethod(
@@ -112,6 +168,7 @@ namespace CsRestClient
                     argc++;
                 }
 
+                ilGen.Emit(OpCodes.Ldarg_0);
                 ilGen.Emit(OpCodes.Ldstr, host);
 
                 var getTypeFromHandle =

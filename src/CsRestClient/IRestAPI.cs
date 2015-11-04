@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace CsRestClient
 {
-    public interface IRequestProcessor
+    public interface IRestAPI
     {
-        void OnRequest(object api, HttpRequest request);
     }
 }

@@ -57,6 +57,7 @@
     <Compile Include="HttpResponse.cs" />
     <Compile Include="INameProcessor.cs" />
     <Compile Include="IRequestProcessor.cs" />
+    <Compile Include="IRestAPI.cs" />
     <Compile Include="ParameterData.cs" />
     <Compile Include="ParameterType.cs" />
     <Compile Include="ParameterTypeDeduction.cs" />

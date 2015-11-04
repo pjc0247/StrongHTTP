@@ -11,24 +11,45 @@ using CsRestClient.Attributes;
 namespace Sample.Google.Maps
 {
     [Service("maps/api/geocode")]
-    public interface MapsAPI
+    public interface MapsAPI : IRestAPI
     {
+        string apiKey { get; set; }
+
         [Resource("json")]
-        ReverseGeocodeResult ReverseGeocode([RequestUri]string key, [RequestUri]double lat, [RequestUri]double lng);
+        Task<string> Geocode([RequestUri]string address);
+
+        [Resource("json")]
+        ReverseGeocodeResult ReverseGeocode([RequestUri]double lat, [RequestUri]double lng);
     }
 
     public static class MapsAPIFactory
     {
-        public static MapsAPI Create()
+        public static MapsAPI Create(string appKey)
         {
-            return RemotePoint.Create<MapsAPI>("https://maps.googleapis.com");
+            var api = RemotePoint.Create<MapsAPI>("https://maps.googleapis.com");
+            api.apiKey = appKey;
+            return api;
+        }
+    }
+
+    [ProcessorTarget(new Type[] { typeof(MapsAPI) })]
+    public class APIKeyProcessor : IParameterProcessor
+    {
+        public void OnParameter(object api, MethodInfo method, List<ParameterData> param)
+        {
+            param.Add(new ParameterData()
+            {
+                type = ParameterType.RequestUri,
+                name = "key",
+                value = ((MapsAPI)api).apiKey
+            });
         }
     }
 
     [ProcessorTarget(new Type[] { typeof(MapsAPI) })]
     public class LatLngProcessor : IParameterProcessor
     {
-        public void OnParameter(MethodInfo method, List<ParameterData> param)
+        public void OnParameter(object api, MethodInfo method, List<ParameterData> param)
         {
             if(method.Name == nameof(MapsAPI.ReverseGeocode))
             {

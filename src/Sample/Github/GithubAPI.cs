@@ -27,7 +27,7 @@ namespace Sample.Github
     [ProcessorTarget(new Type[] { typeof(GithubAPI) })]
     public class UserAgentProcessor : IRequestProcessor
     {
-        public void OnRequest(HttpRequest request)
+        public void OnRequest(object api, HttpRequest request)
         {
             /* all requests sent to github api server must include 
                'User-Agent' header.

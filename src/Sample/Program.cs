@@ -11,6 +11,13 @@ using System.Reflection;
 
 namespace Sample
 {
+    class Foo
+    {
+        public Dictionary<string, object> a = new Dictionary<string, object>();
+
+        public int b { get; set; }
+        public string c { get; set; }
+    }
     class Program
     {
         static void Main(string[] args)
@@ -21,11 +28,10 @@ namespace Sample
             foreach (var p in processors2)
                 Console.WriteLine(p);
 
-            var api = Google.Maps.MapsAPIFactory.Create();
+            var api = Google.Maps.MapsAPIFactory.Create("sssA");
 
-            
             Console.WriteLine(
-                api.ReverseGeocode("", 40.714224,-73.961452).results[0].formatted_address);
+                api.ReverseGeocode(40.714224,-73.961452).results[0].formatted_address);
                 
             var github = Github.GithubAPIFactory.Create();
 

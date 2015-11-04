@@ -9,6 +9,6 @@ namespace CsRestClient
 {
     public interface IParameterProcessor
     {
-        void OnParameter(MethodInfo request, List<ParameterData> parameterData); 
+        void OnParameter(object api, MethodInfo request, List<ParameterData> parameterData); 
     }
 }

@@ -39,9 +39,9 @@ namespace CsRestClient
         public string uri { get; private set; }
         public HttpMethod httpMethod { get; private set; }
 
-        private List<ParameterData> parameterData { get; set; }
+        public List<ParameterData> parameterData { get; private set; }
 
-        public HttpRequest(string host, Type type, MethodInfo method, object[] args)
+        public HttpRequest(object api, string host, Type type, MethodInfo method, object[] args)
         {
             this.host = host;
             this.type = type;
@@ -57,7 +57,7 @@ namespace CsRestClient
             foreach (var processor in processors)
             {
                 var p = (IParameterProcessor)Activator.CreateInstance(processor);
-                p.OnParameter(method, parameterData);    
+                p.OnParameter(api, method, parameterData);    
             }
 
             this.headers = BuildHeader();
@@ -71,7 +71,7 @@ namespace CsRestClient
             foreach (var processor in processors)
             {
                 var p = (IRequestProcessor)Activator.CreateInstance(processor);
-                p.OnRequest(this);
+                p.OnRequest(api, this);
             }
         }
 
