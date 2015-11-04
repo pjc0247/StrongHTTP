@@ -3,7 +3,7 @@ CsRestClient
 ![man](img/man.png)<br>
 Make Interface All The REST Requests!
 
-Usage with Google.Maps.ReverseGeocoding API
+Usage with GoogleMaps API
 ----
 [Full Sourcecode](https://github.com/pjc0247/CsRestClient/tree/master/src/Sample/Google/Maps)<br>
 [API Response](https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&)<br>
