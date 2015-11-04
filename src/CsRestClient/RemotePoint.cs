@@ -105,7 +105,6 @@ namespace CsRestClient
                     null);
                 var ilGen = methodBuilder.GetILGenerator();
 
-                ilGen.EmitWriteLine("A");
                 ilGen.Emit(OpCodes.Ldarg_0);
                 ilGen.Emit(OpCodes.Ldfld, meta);
                 ilGen.Emit(OpCodes.Ret);
@@ -122,7 +121,6 @@ namespace CsRestClient
                     new Type[] { prop.PropertyType  });
                 ilGen = methodBuilder.GetILGenerator();
 
-                ilGen.EmitWriteLine("A");
                 ilGen.Emit(OpCodes.Ldarg_0);
                 ilGen.Emit(OpCodes.Ldarg_1);
                 ilGen.Emit(OpCodes.Stfld, meta);
@@ -194,7 +192,6 @@ namespace CsRestClient
                         BindingFlags.Static | BindingFlags.Public));
                 /* return value of `RPCCall` will be automatically passed to caller,
                    but it needs to be unboxed to original type before returning. */
-                Console.WriteLine(method.ReturnType.IsValueType);
                 ilGen.Emit(OpCodes.Castclass, method.ReturnType);
                 //ilGen.Emit(OpCodes.Ldobj, method.ReturnType);
                 ilGen.Emit(OpCodes.Ret);

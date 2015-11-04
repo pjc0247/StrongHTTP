@@ -78,7 +78,6 @@ namespace CsRestClient
         public HttpResponse GetResponse()
         {
             var req = (HttpWebRequest)HttpWebRequest.Create(uri);
-            Console.WriteLine(uri);
 
             foreach (var header in headers)
             {
