@@ -11,6 +11,7 @@ namespace CsRestClient
         /// <summary>파라미터를 무시합니다.</summary>
         Ignore,
         RequestUri,
+        Binding,
         Suffix,
         PostJson,
         Header

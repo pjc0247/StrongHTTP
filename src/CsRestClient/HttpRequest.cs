@@ -14,6 +14,20 @@ namespace CsRestClient
 {
     using CsRestClient.Attributes;
 
+    public class MyHeaderCollection : WebHeaderCollection
+    {
+        public new void Set(string name, string value)
+        {
+            AddWithoutValidate(name, value);
+        }
+        //or
+        public new string this[string name]
+        {
+            get { return base[name]; }
+            set { AddWithoutValidate(name, value); }
+        }
+    }
+
     public class HttpRequest
     {
         public string host { get; private set; }
@@ -33,19 +47,39 @@ namespace CsRestClient
             this.type = type;
             this.method = method;
             this.args = args;
-
+            
             this.parameterData = BuildParameterData();
             this.headers = BuildHeader();
             this.uri = BuildURI();
             this.httpMethod = method.GetHttpMethod();
+
+            var processors = Assembly.GetEntryAssembly().GetTypes()
+                .Where(m => m.GetInterface(nameof(IRequestProcessor)) != null)
+                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? false);
+
+            foreach (var processor in processors)
+            {
+                var p = (IRequestProcessor)Activator.CreateInstance(processor);
+                p.OnRequest(this);
+            }
         }
 
         public HttpResponse GetResponse()
         {
-            var req = HttpWebRequest.Create(uri);
-            req.Method = httpMethod.ToString();
+            var req = (HttpWebRequest)HttpWebRequest.Create(uri);
+            Console.WriteLine(uri);
+
             foreach (var header in headers)
-                req.Headers.Set(header.Key, header.Value);
+            {
+                if (string.Compare("User-Agent", header.Key, true) == 0)
+                    req.UserAgent = header.Value;
+                else if (string.Compare("Content-Type", header.Key, true) == 0)
+                    req.ContentType = header.Value;
+                else if (string.Compare("Host", header.Key, true) == 0)
+                    req.Host = header.Value;
+                else
+                    req.Headers.Set(header.Key, header.Value);
+            }
             var resp = (HttpWebResponse)req.GetResponse();
 
             var reader = new StreamReader(resp.GetResponseStream());
@@ -95,6 +129,9 @@ namespace CsRestClient
             var apiName = method.GetCustomAttribute<Resource>()?.name ?? method.Name;
             var suffix = "";
 
+            apiName = string.Format(
+                apiName,
+                parameterData.Where(m => m.type == ParameterType.Binding).Select(m => m.value).ToArray());
             var suffixParams =
                 parameterData.Where(m => m.type == ParameterType.Suffix);
             foreach (var param in suffixParams)

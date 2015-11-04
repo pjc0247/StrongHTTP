@@ -50,10 +50,13 @@
     <Compile Include="Attributes\HttpMethodAttributes.cs" />
     <Compile Include="Attributes\ParameterTypeAttributes.cs" />
     <Compile Include="Attributes\PathAttributes.cs" />
+    <Compile Include="Attributes\PipelineProcessorAttributes.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="HttpMethodDeduction.cs" />
     <Compile Include="HttpRequest.cs" />
     <Compile Include="HttpResponse.cs" />
+    <Compile Include="INameProcessor.cs" />
+    <Compile Include="IRequestProcessor.cs" />
     <Compile Include="ParameterData.cs" />
     <Compile Include="ParameterType.cs" />
     <Compile Include="ParameterTypeDeduction.cs" />

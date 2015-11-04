@@ -22,4 +22,8 @@ namespace CsRestClient.Attributes
     public class Header : Attribute
     {
     }
+    [AttributeUsage(AttributeTargets.Parameter)]
+    public class Binding : Attribute
+    {
+    }
 }

@@ -22,6 +22,8 @@ namespace CsRestClient
                 return ParameterType.Suffix;
             else if (param.GetCustomAttribute<PostJson>() != null)
                 return ParameterType.PostJson;
+            else if (param.GetCustomAttribute<Binding>() != null)
+                return ParameterType.Binding;
 
             return ParameterType.RequestUri;
         }
