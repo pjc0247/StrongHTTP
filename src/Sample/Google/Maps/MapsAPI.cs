@@ -16,10 +16,10 @@ namespace Sample.Google.Maps
         string apiKey { get; set; }
 
         [Resource("json")]
-        Task<string> Geocode([RequestUri]string address);
+        GeocodeResult Geocode([RequestUri]string address);
 
         [Resource("json")]
-        ReverseGeocodeResult ReverseGeocode([RequestUri]double lat, [RequestUri]double lng);
+        GeocodeResult ReverseGeocode([RequestUri]double lat, [RequestUri]double lng);
     }
 
     public static class MapsAPIFactory

@@ -28,7 +28,7 @@ namespace Sample
             foreach (var p in processors2)
                 Console.WriteLine(p);
 
-            var api = Google.Maps.MapsAPIFactory.Create("sssA");
+            var api = Google.Maps.MapsAPIFactory.Create("YOUR_API_KEY_HERE");
 
             Console.WriteLine(
                 api.ReverseGeocode(40.714224,-73.961452).results[0].formatted_address);
