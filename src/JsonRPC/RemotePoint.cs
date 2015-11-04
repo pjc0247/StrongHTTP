@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,85 +8,8 @@ using System.Reflection.Emit;
 using System.Net;
 using System.IO;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-namespace JsonRPC
+namespace CsRestClient
 {
-    [AttributeUsage(AttributeTargets.Interface)]
-    public class Service : Attribute
-    {
-        public string path { get; private set; }
-
-        public Service(string path)
-        {
-            this.path = path;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class ByJson : Attribute
-    {
-    }
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class ByRequestUri : Attribute
-    {
-    }
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    public class ByFormData : Attribute
-    {
-    }
-
-    [AttributeUsage(AttributeTargets.Method)]
-    public class HttpMethod : Attribute
-    {
-    }
-    [AttributeUsage(AttributeTargets.Parameter)]
-    public class Suffix : Attribute
-    {
-    }
-
-
-
-    [Service("math")]
-    public interface Sample
-    {
-        int Sum(int a, int b);
-    }
-
-    public static class CaseConv
-    {
-        private static string MakeDelimString(this string target, string delim)
-        {
-            return target.
-                Select((m, i) => i > 0 && char.IsUpper(m) ? delim + m.ToString() : m.ToString())
-                .Aggregate((a, b) => a + b)
-                .ToLower();
-        }
-        public static string ToSnakeCase(this string target)
-        {
-            return target.MakeDelimString("_");
-        }
-        public static string ToUriPath(this string target)
-        {
-            return target.MakeDelimString("/");
-        }
-    }
-
-    public class Config
-    {
-        public delegate string UriProcessor(Type type, MethodInfo method);
-
-        public UriProcessor uriProcessor { get; set; }
-
-        public static Config defaults {
-            get
-            {
-                var config = new Config();
-                return config;
-            }
-        }
-    }
     public class RemotePoint
     {
         public string host { get; private set; }
@@ -102,53 +25,13 @@ namespace JsonRPC
                 this.config = config;
         }
 
-        private static string BuildURI(string host, Type type, MethodInfo method, object[] args)
-        {
-            var serviceName = type.GetCustomAttribute<Service>()?.path ?? type.Name;
-            var apiName = method.Name;
-            var suffix = "";
-
-            foreach(var param in method.GetParameters())
-            {
-                var attr = param.GetCustomAttribute<Suffix>();
-
-                if(attr != null)
-                {
-                    if (suffix.Length == 0)
-                        suffix = "/";
-
-                    suffix += args[param.Position].ToString();
-                }
-            }
-
-            return $"{host}/{serviceName}/{apiName}{suffix}";
-        }
         public static object RPCCall(string host, Type type, MethodInfo method, object[] args)
         {
-            Console.WriteLine(type);
-            Console.WriteLine(method); ;
+            var request = new HttpRequest(host, type, method, args);
+            var response = request.GetResponse();
 
-            Console.WriteLine(BuildURI(host, type, method, args));
-            foreach (var a in args)
-            {
-                Console.WriteLine(a);
-            }
-
-            var dic = new Dictionary<string, object>();
-            foreach (var param in method.GetParameters())
-            {
-                dic[param.Name] = args[param.Position];
-            }
-            Console.WriteLine(JsonConvert.SerializeObject(dic));
-
-            var uri = BuildURI(host, type, method, args);
-            var req = HttpWebRequest.Create(uri);
-            var resp = req.GetResponse();
-
-            var reader = new StreamReader(resp.GetResponseStream());
-            Console.WriteLine(reader.ReadToEnd());
-
-            return (object)2;
+            Console.WriteLine(response.statusCode);
+            return response.body;
         }
 
         private static TypeBuilder CreateType(Type intf)
@@ -181,7 +64,7 @@ namespace JsonRPC
             var typeBuilder = CreateType(typeof(T));
 
             /* black magic */
-            foreach(var method in typeof(T).GetMethods())
+            foreach (var method in typeof(T).GetMethods())
             {
                 m = method;
                 var paramTypes =
@@ -244,34 +127,20 @@ namespace JsonRPC
                         BindingFlags.Static | BindingFlags.Public));
                 /* return value of `RPCCall` will be automatically passed to caller,
                    but it needs to be unboxed to original type before returning. */
-                ilGen.Emit(OpCodes.Unbox, method.ReturnType);
-                ilGen.Emit(OpCodes.Ldobj, method.ReturnType);
+                Console.WriteLine(method.ReturnType.IsValueType);
+                ilGen.Emit(OpCodes.Castclass, method.ReturnType);
+                //ilGen.Emit(OpCodes.Ldobj, method.ReturnType);
                 ilGen.Emit(OpCodes.Ret);
 
                 typeBuilder.DefineMethodOverride(
                     methodBuilder,
                     typeof(T).GetMethod(method.Name));
             }
-            
+
             Type type = typeBuilder.CreateType();
             object obj = Activator.CreateInstance(type);
 
             return (T)obj;
-        }
-    }
-
-    public class Program
-    {
-        public static int Sum(int a,int b)
-        {
-            Console.WriteLine(a);
-            Console.WriteLine(b);
-            return a + b;
-        }
-        static void Main(string[] args)
-        {
-            Console.WriteLine(
-                RemotePoint.Create<Sample>("http://www.naver.com").Sum(1, 2));
         }
     }
 }
