@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace Sample.Google.Maps
 {
+    /* response sample */
+    /* https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452& */
     public class ReverseGeocodeResult
     {
         public class Result
@@ -17,8 +19,10 @@ namespace Sample.Google.Maps
                 public string[] types { get; set; }
             }
 
-            public AddressComponent[] address_components;
-            public string formatted_address;
+            public AddressComponent[] address_components { get; set }
+            public string formatted_address { get; set; }
+            public string place_id { get; set; }
+            public string[] types { get; set; }
         }
 
         public Result[] results { get; set; }
