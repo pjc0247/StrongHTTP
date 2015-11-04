@@ -1,4 +1,4 @@
-meata-data
+meta-data
 ====
 각각의 API 인스턴스마다 분리되어 저장되어야 하는 데이터가 있습니다.<br>
 예를들어 `Google.Maps` API는 모든 API 호출에 Key를 집어넣어야 합니다.
