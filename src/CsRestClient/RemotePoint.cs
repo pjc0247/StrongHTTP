@@ -34,10 +34,14 @@ namespace CsRestClient
             var request = new HttpRequest(host, type, method, args);
             var response = request.GetResponse();
 
-            Console.WriteLine(response.statusCode);
-            Console.WriteLine(response.body);
-            var ret = JsonConvert.DeserializeObject(response.body, method.ReturnType);
-            return ret;
+            if (method.ReturnType == typeof(string))
+                return response.body;
+            else if (method.ReturnType == typeof(HttpResponse))
+                return response;
+            else
+            {
+                return JsonConvert.DeserializeObject(response.body, method.ReturnType);
+            }
         }
 
         private static TypeBuilder CreateType(Type intf)
