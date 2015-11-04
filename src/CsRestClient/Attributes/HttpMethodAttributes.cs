@@ -13,5 +13,44 @@ namespace CsRestClient.Attributes
     [AttributeUsage(AttributeTargets.Method)]
     public class Method : Attribute
     {
+        public HttpMethod method { get; set; }
+
+        public Method(HttpMethod method)
+        {
+            this.method = method;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class Get : Method
+    {
+        public Get() :
+            base(HttpMethod.Get)
+        {
+        }
+    }
+    [AttributeUsage(AttributeTargets.Method)]
+    public class Post : Method
+    {
+        public Post() :
+            base(HttpMethod.Post)
+        {
+        }
+    }
+    [AttributeUsage(AttributeTargets.Method)]
+    public class Put : Method
+    {
+        public Put() :
+            base(HttpMethod.Put)
+        {
+        }
+    }
+    [AttributeUsage(AttributeTargets.Method)]
+    public class Delete : Method
+    {
+        public Delete() :
+            base(HttpMethod.Delete)
+        {
+        }
     }
 }

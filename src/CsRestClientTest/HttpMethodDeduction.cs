@@ -19,9 +19,13 @@ namespace CsRestClientTest
         }
         interface TestModel2
         {
+            [Get]
             void GetUser();
+            [Post]
             void CreateUser();
+            [Put]
             void UpdateUser();
+            [Delete]
             void DeleteUser();
         }
 
@@ -47,7 +51,20 @@ namespace CsRestClientTest
         [TestMethod]
         public void DeductionByAttribute()
         {
+            var intf = typeof(TestModel2);
 
+            Assert.AreEqual(
+                HttpMethod.Get,
+                intf.GetMethod("GetUser").GetHttpMethod());
+            Assert.AreEqual(
+                HttpMethod.Post,
+                intf.GetMethod("CreateUser").GetHttpMethod());
+            Assert.AreEqual(
+                HttpMethod.Put,
+                intf.GetMethod("UpdateUser").GetHttpMethod());
+            Assert.AreEqual(
+                HttpMethod.Delete,
+                intf.GetMethod("DeleteUser").GetHttpMethod());
         }
     }
 }

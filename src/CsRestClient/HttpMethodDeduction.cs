@@ -34,7 +34,11 @@ namespace CsRestClient
         private static HttpMethod GetHttpMethodByAttribute(
             this MethodInfo method)
         {
-            //method.GetCustomAttribute<>
+            var attr = method.GetCustomAttribute<Method>();
+            if (attr != null)
+            {
+                return attr.method;
+            }
 
             throw new InvalidOperationException();
         }
