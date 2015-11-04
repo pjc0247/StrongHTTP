@@ -13,13 +13,12 @@ public interface MapsAPI
 {
     [Resource("json")]
     ReverseGeocodeResult ReverseGeocode(
-        [RequestUri]string key,
         [RequestUri]double lat, [RequestUri]double lng);
 }
 ```
 ```c#
 var api = Google.Maps.MapsAPIFactory.Create();
-var response = api.ReverseGeocode("", 40.714224,-73.961452);
+var response = api.ReverseGeocode(40.714224,-73.961452);
 
 foreach(var result in response.results) {
   Console.WriteLine(result.formatted_address);
