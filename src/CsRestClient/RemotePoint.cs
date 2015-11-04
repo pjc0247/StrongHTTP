@@ -8,6 +8,10 @@ using System.Reflection.Emit;
 using System.Net;
 using System.IO;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+
 namespace CsRestClient
 {
     public class RemotePoint
@@ -31,7 +35,9 @@ namespace CsRestClient
             var response = request.GetResponse();
 
             Console.WriteLine(response.statusCode);
-            return response.body;
+            Console.WriteLine(response.body);
+            var ret = JsonConvert.DeserializeObject(response.body, method.ReturnType);
+            return ret;
         }
 
         private static TypeBuilder CreateType(Type intf)

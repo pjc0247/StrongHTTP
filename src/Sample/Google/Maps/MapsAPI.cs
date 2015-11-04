@@ -14,7 +14,7 @@ namespace Sample.Google.Maps
     public interface MapsAPI
     {
         [Resource("json")]
-        string ReverseGeocode([RequestUri]string key, [RequestUri]double lat, [RequestUri]double lng);
+        ReverseGeocodeResult ReverseGeocode([RequestUri]string key, [RequestUri]double lat, [RequestUri]double lng);
     }
 
     public static class MapsAPIFactory

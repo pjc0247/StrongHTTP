@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Github\GithubAPI.cs" />
     <Compile Include="Google\Maps\MapsAPI.cs" />
+    <Compile Include="Google\Maps\ReverseGeocodeResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

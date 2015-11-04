@@ -25,7 +25,7 @@ namespace Sample
 
             
             Console.WriteLine(
-                api.ReverseGeocode("", 40.714224,-73.961452));
+                api.ReverseGeocode("", 40.714224,-73.961452).results[0].formatted_address);
                 
             var github = Github.GithubAPIFactory.Create();
 
