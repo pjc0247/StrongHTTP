@@ -10,7 +10,7 @@ namespace CsRestClient.Attributes
     public class AutoHttpMethod : Attribute
     {
     }
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class Method : Attribute
     {
         public HttpMethod method { get; set; }

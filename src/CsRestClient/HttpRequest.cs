@@ -52,7 +52,7 @@ namespace CsRestClient
 
             var processors = Assembly.GetEntryAssembly().GetTypes()
                 .Where(m => m.GetInterface(nameof(IParameterProcessor)) != null)
-                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? false);
+                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? true);
 
             foreach (var processor in processors)
             {
@@ -66,7 +66,7 @@ namespace CsRestClient
 
             processors = Assembly.GetEntryAssembly().GetTypes()
                 .Where(m => m.GetInterface(nameof(IRequestProcessor)) != null)
-                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? false);
+                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? true);
 
             foreach (var processor in processors)
             {
