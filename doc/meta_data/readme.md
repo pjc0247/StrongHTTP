@@ -19,10 +19,10 @@ public interface MapsAPI
 ```c#
 public static class MapsAPIFactory
 {
-    public static MapsAPI Create(string appKey)
+    public static MapsAPI Create(string apiKey)
     {
         var api = RemotePoint.Create<MapsAPI>("https://maps.googleapis.com");
-        api.apiKey = appKey;
+        api.apiKey = apiKey;
         return api;
     }
 }
