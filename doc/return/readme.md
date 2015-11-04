@@ -24,7 +24,8 @@ response.body;
 
 커스텀 클래스 타입
 ----
-HttpResponse의 body가 Json이라고 가정하고, body를 커스텀 클래스 타입으로 Deserialize합니다. Json Deserialize 메소드는 [Json.Net](http://www.newtonsoft.com/json)을 사용합니다.
+HttpResponse의 body가 Json이라고 가정하고, body를 커스텀 클래스 타입으로 Deserialize합니다. Json Deserialize 메소드는 [Json.Net](http://www.newtonsoft.com/json)을 사용합니다.<br>
+이 경우 body가 올바르지 않은 json 포멧으로 구성되었을 경우 익셉션이 발생합니다.
 ```c#
 public class MyFooResult {
   public string name {get;set;}
