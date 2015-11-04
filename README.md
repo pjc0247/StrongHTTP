@@ -12,7 +12,9 @@ Usage with Google.Maps.ReverseGeocoding API
 public interface MapsAPI
 {
     [Resource("json")]
-    ReverseGeocodeResult ReverseGeocode([RequestUri]string key, [RequestUri]double lat, [RequestUri]double lng);
+    ReverseGeocodeResult ReverseGeocode(
+        [RequestUri]string key,
+        [RequestUri]double lat, [RequestUri]double lng);
 }
 ```
 ```c#
