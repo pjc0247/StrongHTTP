@@ -53,12 +53,6 @@
     <Compile Include="HttpMethodDeduction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JsonRPC\CsRestClient.csproj">
-      <Project>{877705fd-88bc-4123-bd45-5c2e1f7c26e4}</Project>
-      <Name>CsRestClient</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsRestClient", "JsonRPC\CsRestClient.csproj", "{877705FD-88BC-4123-BD45-5C2E1F7C26E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsRestClient", "CsRestClient\CsRestClient.csproj", "{877705FD-88BC-4123-BD45-5C2E1F7C26E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsRestClientTest", "JsonRPCTest\CsRestClientTest.csproj", "{A3419CC0-6CD4-4820-A038-07BEDA3831D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsRestClientTest", "CsRestClientTest\CsRestClientTest.csproj", "{A3419CC0-6CD4-4820-A038-07BEDA3831D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
