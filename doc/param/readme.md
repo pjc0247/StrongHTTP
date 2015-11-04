@@ -52,6 +52,22 @@ Foo("park", 10);
 GET /foo/park/10 HTTP/1.1
 ```
 
+binding 타입
+----
+파라미터가 __Resource__에 입력한 문자열에 바인딩됩니다.
+<br><br>
+__예제__
+```c#
+[Resource("foo/{0}/profile")]
+void Foo([Binding]string name);
+```
+```c#
+Foo("park");
+```
+```
+GET /foo/park/profile HTTP/1.1
+```
+
 post_json 타입
 ----
 파라미터가 __post__에 json 형식으로 추가되어 전달됩니다.
