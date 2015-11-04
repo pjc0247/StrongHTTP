@@ -26,7 +26,7 @@ namespace Sample.Google.Maps
     }
 
     [ProcessorTarget(new Type[] { typeof(MapsAPI) })]
-    public class UserAgentProcessor : INameProcessor
+    public class LatLngProcessor : INameProcessor
     {
         public void OnParameter(MethodInfo method, List<ParameterData> param)
         {
