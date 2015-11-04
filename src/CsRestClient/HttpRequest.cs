@@ -49,11 +49,22 @@ namespace CsRestClient
             this.args = args;
             
             this.parameterData = BuildParameterData();
+
+            var processors = Assembly.GetEntryAssembly().GetTypes()
+                .Where(m => m.GetInterface(nameof(INameProcessor)) != null)
+                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? false);
+
+            foreach (var processor in processors)
+            {
+                var p = (INameProcessor)Activator.CreateInstance(processor);
+                p.OnParameter(method, parameterData);    
+            }
+
             this.headers = BuildHeader();
             this.uri = BuildURI();
             this.httpMethod = method.GetHttpMethod();
 
-            var processors = Assembly.GetEntryAssembly().GetTypes()
+            processors = Assembly.GetEntryAssembly().GetTypes()
                 .Where(m => m.GetInterface(nameof(IRequestProcessor)) != null)
                 .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? false);
 

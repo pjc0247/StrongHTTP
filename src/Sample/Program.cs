@@ -23,10 +23,10 @@ namespace Sample
 
             var api = Google.Maps.MapsAPIFactory.Create();
 
-            /*
+            
             Console.WriteLine(
-                api.ReverseGeocode("", "40.714224,-73.961452"));
-                */
+                api.ReverseGeocode("", 40.714224,-73.961452));
+                
             var github = Github.GithubAPIFactory.Create();
 
             Console.WriteLine(
