@@ -29,6 +29,9 @@ namespace Sample.Github
     {
         public void OnRequest(HttpRequest request)
         {
+            /* all requests sent to github api server must include 
+               'User-Agent' header.
+            /* https://developer.github.com/v3/#user-agent-required */
             request.headers["User-Agent"] = "MyAwesomeGitClient";
         }
     }
