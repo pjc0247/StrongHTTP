@@ -9,6 +9,12 @@ using CsRestClient.Attributes;
 
 namespace Sample.Example.PipelineProcessor
 {
+    /* INameProcessor는 네이밍 컨벤션을 변경할 때 사용됩니다.
+       
+        아래의 예제는 요청의 각 파라미터들과, 리소스 주소를 모두
+        소문자로 바꾸는 방법을 보여줍니다.
+     */
+
     public interface NameProcessorTestAPI
     {
         /* /mytestrequest */
