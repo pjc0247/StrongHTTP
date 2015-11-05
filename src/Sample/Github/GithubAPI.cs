@@ -17,23 +17,15 @@ namespace Sample.Github
 
         public RepoAPI GetRepo(string owner, string name)
         {
-            var api = Create<RepoAPI>(authString);
+            var api = GithubAPIFactory.Create<RepoAPI>(authString);
             api.owner = owner;
             api.name = name;
             return api;
         }
         public GistAPI GetGist(string id)
         {
-            var api = Create<GistAPI>(authString);
+            var api = GithubAPIFactory.Create<GistAPI>(authString);
             api.id = id;
-            return api;
-        }
-
-        private static T Create<T>(string authString)
-            where T : APIBase
-        {
-            var api = RemotePoint.Create<T>("https://api.github.com");
-            api.authString = authString;
             return api;
         }
     }
@@ -51,7 +43,7 @@ namespace Sample.Github
 
             return api;
         }
-        private static T Create<T>(string authString)
+        internal static T Create<T>(string authString)
             where T : APIBase
         {
             var api = RemotePoint.Create<T>("https://api.github.com");

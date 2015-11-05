@@ -9,12 +9,12 @@ using CsRestClient.Attributes;
 
 namespace Sample.Github
 {
-    [AutoHttpMethod]
     public interface APIBase
     {
         string authString { get; set; }
     }
 
+    [AutoHttpMethod]
     public interface UserAPI : APIBase
     {
         [Resource("gists")]
@@ -33,6 +33,7 @@ namespace Sample.Github
 
         string GetReadme();
     }
+    [AutoHttpMethod]
     [Service("gists")]
     public interface GistAPI : APIBase
     {
@@ -45,9 +46,9 @@ namespace Sample.Github
 
         [Put]
         [Resource("star")]
-        string Start();
+        string Star();
         [Put]
         [Resource("star")]
-        string Unstart();
+        string Unstar();
     }
 }
