@@ -21,8 +21,6 @@ namespace CsRestClient
             if (api.GetType().GetCustomAttributes(true).Any(m => m is AutoHttpMethod) == false)
                 return name;
 
-            Console.WriteLine("QQQQ" + name);
-
             foreach (var prefix in HttpMethodDeduction.deductionTable)
             {
                 if (name.ToLower().StartsWith(prefix.Key.ToLower()))
