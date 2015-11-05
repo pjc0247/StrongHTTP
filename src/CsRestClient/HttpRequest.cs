@@ -30,6 +30,7 @@ namespace CsRestClient
 
     public class HttpRequest
     {
+        public object api { get; private set; }
         public string host { get; private set; }
         public Type type { get; private set; }
         public MethodInfo method { get; private set; }
@@ -43,6 +44,7 @@ namespace CsRestClient
 
         public HttpRequest(object api, string host, Type type, MethodInfo method, object[] args)
         {
+            this.api = api;
             this.host = host;
             this.type = type;
             this.method = method;
@@ -51,28 +53,26 @@ namespace CsRestClient
             this.parameterData = BuildParameterData();
 
             var processors = Assembly.GetEntryAssembly().GetTypes()
-                .Where(m => m.GetInterface(nameof(IParameterProcessor)) != null)
-                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? true);
+                .Where(m => m.GetInterface(nameof(INameProcessor)) != null)
+                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? true)
+                .OrderBy(m => m.GetCustomAttribute<ProcessorOrder>()?.order ?? 0);
 
             foreach (var processor in processors)
             {
-                var p = (IParameterProcessor)Activator.CreateInstance(processor);
-                p.OnParameter(api, method, parameterData);    
+                var p = (INameProcessor)Activator.CreateInstance(processor);
+                foreach(var param in parameterData)
+                {
+                    param.name = p.OnParameter(param);
+                }
             }
+
+            this.ExecuteParameterProcessors();
 
             this.headers = BuildHeader();
             this.uri = BuildURI();
             this.httpMethod = method.GetHttpMethod();
 
-            processors = Assembly.GetEntryAssembly().GetTypes()
-                .Where(m => m.GetInterface(nameof(IRequestProcessor)) != null)
-                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? true);
-
-            foreach (var processor in processors)
-            {
-                var p = (IRequestProcessor)Activator.CreateInstance(processor);
-                p.OnRequest(api, this);
-            }
+            this.ExecuteRequestProcessors();
         }
 
         public HttpResponse GetResponse()
@@ -124,6 +124,7 @@ namespace CsRestClient
             {
                 var data = new ParameterData();
                 data.name = param.Name;
+                data.rawName = param.Name;
                 data.position = param.Position;
                 data.value = args[param.Position];
                 data.type = param.GetParamType(method);
@@ -142,6 +143,9 @@ namespace CsRestClient
             apiName = string.Format(
                 apiName,
                 parameterData.Where(m => m.type == ParameterType.Binding).Select(m => m.value).ToArray());
+
+            this.ExecuteNameProcessors(ref apiName);
+
             var suffixParams =
                 parameterData.Where(m => m.type == ParameterType.Suffix);
             foreach (var param in suffixParams)

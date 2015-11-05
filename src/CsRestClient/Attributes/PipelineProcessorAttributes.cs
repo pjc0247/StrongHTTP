@@ -15,4 +15,14 @@ namespace CsRestClient.Attributes
             this.targets = targets;
         }
     }
+
+    public class ProcessorOrder : Attribute
+    {
+        public int order = 0;
+
+        public ProcessorOrder(int order)
+        {
+            this.order = order;
+        }
+    }
 }
