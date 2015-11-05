@@ -35,3 +35,8 @@ var ret = await math.Sum(5, 5);
 Sample Projects
 ----
 * [Cs.Github.v3](https://github.com/pjc0247/Cs.Github.v3)
+
+Contibution Guide
+----
+![c](img/cg1.png)<br>
+![c](img/cg2.png)
