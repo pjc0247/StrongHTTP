@@ -12,11 +12,34 @@ namespace CsRestClient
 
     internal static class PipelineProcessor
     {
+        public static bool InheritsFrom(this Type type, Type baseType)
+        {
+            var currentType = type;
+            while (currentType != null)
+            {
+                if (currentType.GetInterface(baseType.Name) != null)
+                {
+                    return true;
+                }
+
+                currentType = currentType.BaseType;
+            }
+
+            return false;
+        }
+
         private static IEnumerable<T> GetProcessors<T>(this HttpRequest request)
         {
             return Assembly.GetEntryAssembly().GetTypes()
-                .Where(m => m.GetInterface(nameof(T)) != null)
-                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(request.type) ?? true)
+                .Union(Assembly.GetCallingAssembly().GetTypes())
+                .Where(m => m.GetInterface(typeof(T).Name) != null)
+                .Where(m => {
+                var attr = m.GetCustomAttribute<ProcessorTarget>();
+                if (attr == null) return true;
+                return attr.targets
+                    .Where(n => InheritsFrom(request.type, n))
+                    .Count() > 0;
+                })
                 .OrderBy(m => m.GetCustomAttribute<ProcessorOrder>()?.order ?? 0)
                 .Select(m => (T)Activator.CreateInstance(m));
         }
@@ -38,7 +61,7 @@ namespace CsRestClient
         {
             foreach (var processor in request.GetProcessors<INameProcessor>())
             {
-                apiName = processor.OnResource(apiName);
+                apiName = processor.OnResource(request.api, apiName);
             }
         }
         public static void ExecuteParameterNameProcessors(this HttpRequest request)
@@ -46,7 +69,7 @@ namespace CsRestClient
             foreach (var processor in request.GetProcessors<INameProcessor>())
             {
                 foreach (var param in request.parameterData)
-                    param.name = processor.OnParameter(param);
+                    param.name = processor.OnParameter(request.api, param);
             }
         }
     }

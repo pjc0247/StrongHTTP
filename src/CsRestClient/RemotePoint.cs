@@ -65,6 +65,14 @@ namespace CsRestClient
                 null,
                 new Type[] { intf });
 
+            foreach(var attr in intf.GetCustomAttributesData())
+            {
+                var customAttrBuilder = new CustomAttributeBuilder(
+                    attr.Constructor,
+                    attr.ConstructorArguments.Select(m => m.Value).ToArray());
+                typeBuilder.SetCustomAttribute(customAttrBuilder);
+            }
+
             var meta = typeBuilder.DefineField(
                 "metaData", typeof(Dictionary<string, object>), FieldAttributes.Public);
             ConstructorBuilder ctor =
@@ -84,11 +92,36 @@ namespace CsRestClient
             return typeBuilder;
         }
 
+        private static List<PropertyInfo> GetProperties(Type intf)
+        {
+            List<PropertyInfo> props = new List<PropertyInfo>();
+            HashSet<Type> processed = new HashSet<Type>();
+            var q = new Queue<Type>();
+
+            q.Enqueue(intf);
+            while (q.Count > 0)
+            {
+                var v = q.Dequeue();
+
+                processed.Add(v);
+                foreach (var i in v.GetInterfaces())
+                {
+                    if (processed.Contains(i))
+                        continue;
+
+                    q.Enqueue(i);
+                }
+
+                props.AddRange(v.GetProperties());
+            }
+
+            return props.Distinct().ToList();
+        }
         public static T Create<T>(string host)
         {
             var typeBuilder = CreateType(typeof(T));
 
-            foreach(var prop in typeof(T).GetProperties())
+            foreach(var prop in GetProperties(typeof(T)))
             {
                 var meta = typeBuilder.DefineField(
                     "_" + prop.Name, prop.PropertyType, FieldAttributes.Public);

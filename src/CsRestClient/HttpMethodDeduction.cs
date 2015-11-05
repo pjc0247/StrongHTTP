@@ -12,7 +12,7 @@ namespace CsRestClient
 
     internal static class HttpMethodDeduction
     {
-        private static Dictionary<string, HttpMethod> deductionTable { get; } =
+        internal static Dictionary<string, HttpMethod> deductionTable { get; } =
             new Dictionary<string, HttpMethod>()
             {
                 /* GET */

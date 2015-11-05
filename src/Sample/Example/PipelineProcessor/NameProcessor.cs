@@ -30,11 +30,11 @@ namespace Sample.Example.PipelineProcessor
     [ProcessorTarget(new Type[] { typeof(NameProcessorTestAPI) })]
     public class NameProcessor : INameProcessor
     {
-        public string OnParameter(ParameterData param)
+        public string OnParameter(object api, ParameterData param)
         {
             return param.name.ToLower();
         }
-        public string OnResource(string name)
+        public string OnResource(object api, string name)
         {
             return name.ToLower();
         }

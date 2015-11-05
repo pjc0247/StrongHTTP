@@ -48,7 +48,7 @@ namespace CsRestClient
                 var p = (INameProcessor)Activator.CreateInstance(processor);
                 foreach(var param in parameterData)
                 {
-                    param.name = p.OnParameter(param);
+                    param.name = p.OnParameter(api, param);
                 }
             }
 
@@ -66,6 +66,7 @@ namespace CsRestClient
         {
             var req = (HttpWebRequest)HttpWebRequest.Create(uri);
 
+            Console.WriteLine(uri);
             foreach (var header in headers)
             {
                 if (string.Compare("User-Agent", header.Key, true) == 0)
@@ -137,11 +138,10 @@ namespace CsRestClient
                 parameterData.Where(m => m.type == ParameterType.Suffix);
             foreach (var param in suffixParams)
             {
-                if (suffix.Length == 0)
-                    suffix = "/";
-
-                suffix += param.value.ToString();
+                suffix += "/" + param.value.ToString();
             }
+            if (apiName.Length == 0)
+                suffix = suffix.TrimStart('/');
 
             var requestUriParams =
                 parameterData.Where(m => m.type == ParameterType.RequestUri);

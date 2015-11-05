@@ -51,6 +51,7 @@
     <Compile Include="Attributes\ParameterTypeAttributes.cs" />
     <Compile Include="Attributes\PathAttributes.cs" />
     <Compile Include="Attributes\PipelineProcessorAttributes.cs" />
+    <Compile Include="AutoMethodTrimProcessor.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="HttpMethodDeduction.cs" />
     <Compile Include="HttpRequest.cs" />

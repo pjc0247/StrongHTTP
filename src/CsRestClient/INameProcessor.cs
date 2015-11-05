@@ -9,7 +9,7 @@ namespace CsRestClient
 {
     public interface INameProcessor
     {
-        string OnResource(string name);
-        string OnParameter(ParameterData param);
+        string OnResource(object api, string name);
+        string OnParameter(object api, ParameterData param);
     }
 }
