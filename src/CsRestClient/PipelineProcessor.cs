@@ -34,11 +34,19 @@ namespace CsRestClient
                 processor.OnRequest(request.api, request);
             }
         }
-        public static void ExecuteNameProcessors(this HttpRequest request, ref string apiName)
+        public static void ExecuteResourceNameProcessors(this HttpRequest request, ref string apiName)
         {
             foreach (var processor in request.GetProcessors<INameProcessor>())
             {
                 apiName = processor.OnResource(apiName);
+            }
+        }
+        public static void ExecuteParameterNameProcessors(this HttpRequest request)
+        {
+            foreach (var processor in request.GetProcessors<INameProcessor>())
+            {
+                foreach (var param in request.parameterData)
+                    param.name = processor.OnParameter(param);
             }
         }
     }

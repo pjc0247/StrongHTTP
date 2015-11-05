@@ -73,6 +73,7 @@ namespace CsRestClient
             this.httpMethod = method.GetHttpMethod();
 
             this.ExecuteRequestProcessors();
+            this.ExecuteParameterProcessors();
         }
 
         public HttpResponse GetResponse()
@@ -144,7 +145,7 @@ namespace CsRestClient
                 apiName,
                 parameterData.Where(m => m.type == ParameterType.Binding).Select(m => m.value).ToArray());
 
-            this.ExecuteNameProcessors(ref apiName);
+            this.ExecuteResourceNameProcessors(ref apiName);
 
             var suffixParams =
                 parameterData.Where(m => m.type == ParameterType.Suffix);
