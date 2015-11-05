@@ -58,8 +58,8 @@ namespace CsRestClient
             this.uri = BuildURI();
             this.httpMethod = method.GetHttpMethod();
 
-            this.ExecuteRequestProcessors();
             this.ExecuteParameterProcessors();
+            this.ExecuteRequestProcessors();
         }
 
         public HttpResponse GetResponse()
