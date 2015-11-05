@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Example\PipelineProcessor\NameProcessor.cs" />
+    <Compile Include="Github\APIInterfaces.cs" />
     <Compile Include="Github\GithubAPI.cs" />
+    <Compile Include="Github\Processors.cs" />
     <Compile Include="Google\Maps\MapsAPI.cs" />
     <Compile Include="Google\Maps\Processors.cs" />
     <Compile Include="Google\Maps\ReverseGeocodeResult.cs" />

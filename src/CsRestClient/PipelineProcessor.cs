@@ -36,6 +36,7 @@ namespace CsRestClient
                 .Where(m => {
                 var attr = m.GetCustomAttribute<ProcessorTarget>();
                 if (attr == null) return true;
+                if(attr.targets.Contains(request.type)) return true;
                 return attr.targets
                     .Where(n => InheritsFrom(request.type, n))
                     .Count() > 0;

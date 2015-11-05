@@ -8,6 +8,7 @@ namespace CsRestClient
 {
     using CsRestClient.Attributes;
 
+    [ProcessorOrder(-1000)]
     public class AutoMethodTrimProcessor : INameProcessor
     {
         public string OnParameter(object api, ParameterData param)
@@ -19,6 +20,8 @@ namespace CsRestClient
         {
             if (api.GetType().GetCustomAttributes(true).Any(m => m is AutoHttpMethod) == false)
                 return name;
+
+            Console.WriteLine("QQQQ" + name);
 
             foreach (var prefix in HttpMethodDeduction.deductionTable)
             {
