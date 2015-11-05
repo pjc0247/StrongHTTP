@@ -7,6 +7,7 @@
 ----
 * 200이 아닌 리스폰스가 올 경우 [WebException](https://msdn.microsoft.com/ko-kr/library/system.net.webexception(v=vs.110).aspx)이 발생합니다.
 * (리턴을 커스텀 클래스로 받을 때) json 파싱에 실패할 경우 Json.Net의 익셉션이 발생합니다.
+* 현재 단계에서의 CsRestClient의 에러 핸들링은 매우 깔끔하지 못하며, 곧 수정될 예정입니다.
 
 ToDo
 ----
