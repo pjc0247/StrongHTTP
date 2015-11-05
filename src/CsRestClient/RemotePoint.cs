@@ -44,6 +44,10 @@ namespace CsRestClient
             }
         }
 
+        /*  TODO : IL-EMIT 사용하는 지저분한 코드 전부 오븐으로 교체
+            
+            https://github.com/pjc0247/Oven
+         */
         private static TypeBuilder CreateType(Type intf)
         {
             var implName = intf.Name + "Impl";
@@ -124,7 +128,7 @@ namespace CsRestClient
             foreach(var prop in GetProperties(typeof(T)))
             {
                 var meta = typeBuilder.DefineField(
-                    "_" + prop.Name, prop.PropertyType, FieldAttributes.Public);
+                    "_" + prop.Name, prop.PropertyType, FieldAttributes.Private);
 
                 var methodBuilder = typeBuilder.DefineMethod(
                     "get_" + prop.Name,
