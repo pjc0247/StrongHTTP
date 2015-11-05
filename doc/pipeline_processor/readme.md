@@ -58,7 +58,7 @@ public class BasicAuthProcessor : IRequestProcessor
 프로세서 실행순서 설정하기
 ----
 `ProcessorOrder` 속성을 이용해서 프로세서가 실행되는 순서를 설정할 수 있습니다. 만약 설정하지 않는다면 기본값은 0입니다.<br>
-같은 번호의 프로세서끼리의 실행순서는 보장되지 않습니다.
+낮은 번호의 프로세서일수록 먼저 실행되며, 같은 번호의 프로세서끼리의 실행순서는 보장되지 않습니다.
 ```C#
 [ProcessorOrder(1000)]
 public class NameProcessor : INameProcessor
