@@ -1,0 +1,4 @@
+language: csharp
+solution: src/CsRestClient.sln
+script:
+  - xbuild /p:Configuration=Release src/CsRestClient.sln
