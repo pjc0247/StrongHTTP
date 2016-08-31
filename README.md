@@ -2,6 +2,7 @@ CsRestClient
 ====
 ![man](img/man.png)<br>
 Make Interface All The REST Requests!
+[![Build Status](https://travis-ci.org/pjc0247/CsRestClient.svg?branch=master)](https://travis-ci.org/pjc0247/CsRestClient)
 
 Usage with GoogleMaps API
 ----
