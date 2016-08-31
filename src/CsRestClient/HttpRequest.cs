@@ -6,6 +6,7 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -122,15 +123,41 @@ namespace CsRestClient
 
             return parameterData;
         }
+
+        private string BindColonValues(string input)
+        {
+            var sb = new StringBuilder(input);
+            var regex = new Regex(":([a-zA-Z0-9_]+)");
+
+            foreach (Match match in regex.Matches(input))
+            {
+                var name = match.Groups[1].Value;
+                var property = type.GetProperty(name);
+
+                if (property != null)
+                {
+                    string value = property.GetValue(api).ToString();
+
+                    sb.Replace(
+                        $":{match.Groups[1].Value}",
+                        value);
+                }
+            }
+            
+            return sb.ToString();
+        }
         private string BuildURI()
         {
             var serviceName = type.GetCustomAttribute<Service>()?.path ?? type.Name;
             var apiName = method.GetCustomAttribute<Resource>()?.name ?? method.Name;
             var suffix = "";
 
-            apiName = string.Format(
-                apiName,
-                parameterData.Where(m => m.type == ParameterType.Binding).Select(m => m.value).ToArray());
+            apiName = Uri.EscapeUriString(BindColonValues(apiName));
+            apiName = 
+                Uri.EscapeUriString(
+                    string.Format(
+                        apiName,
+                        parameterData.Where(m => m.type == ParameterType.Binding).Select(m => m.value).ToArray()));
 
             this.ExecuteResourceNameProcessors(ref apiName);
 
