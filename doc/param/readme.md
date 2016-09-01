@@ -67,6 +67,15 @@ Foo("park");
 ```
 GET /foo/park/profile HTTP/1.1
 ```
+`:PROPERTY_NAME` 포멧을 이용하면 프로퍼티를 바인딩할 수 있습니다.
+```cs
+interface UserProfile : APIBase {
+  string name { get; set; }
+  
+  [Resource(":name/nickname")]
+  Task<string> GetNickname();
+}
+```
 
 post_json 타입
 ----
