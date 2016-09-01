@@ -165,16 +165,10 @@ namespace CsRestClient
                 returnType = method.ReturnType.GetGenericArguments()[0];
                 paramTypes = new Type[] { };
             }
-            
-            var methodBuilder = typeBuilder.DefineMethod(
-                prefix + method.Name,
-                MethodAttributes.Public |
-                MethodAttributes.Virtual |
-                MethodAttributes.NewSlot |
-                MethodAttributes.HideBySig |
-                MethodAttributes.Final,
-                returnType,
-                paramTypes);
+
+            var methodBuilder =
+                typeBuilder.CreateMethod(prefix + method.Name,
+                returnType, paramTypes);
             var ilGen = methodBuilder.GetILGenerator();
 
             /* args... -> object[] */
@@ -249,41 +243,9 @@ namespace CsRestClient
 
             foreach(var prop in GetProperties(typeof(T)))
             {
-                var meta = typeBuilder.DefineField(
-                    "_" + prop.Name, prop.PropertyType, FieldAttributes.Private);
-
-                var methodBuilder = typeBuilder.DefineMethod(
-                    "get_" + prop.Name,
-                    MethodAttributes.Public |
-                    MethodAttributes.Virtual |
-                    MethodAttributes.NewSlot |
-                    MethodAttributes.HideBySig |
-                    MethodAttributes.SpecialName |
-                    MethodAttributes.Final,
-                    prop.PropertyType,
-                    null);
-                var ilGen = methodBuilder.GetILGenerator();
-
-                ilGen.Emit(OpCodes.Ldarg_0);
-                ilGen.Emit(OpCodes.Ldfld, meta);
-                ilGen.Emit(OpCodes.Ret);
-
-                methodBuilder = typeBuilder.DefineMethod(
-                    "set_" + prop.Name,
-                    MethodAttributes.Public |
-                    MethodAttributes.Virtual |
-                    MethodAttributes.NewSlot |
-                    MethodAttributes.HideBySig |
-                    MethodAttributes.SpecialName |
-                    MethodAttributes.Final,
-                    null,
-                    new Type[] { prop.PropertyType  });
-                ilGen = methodBuilder.GetILGenerator();
-
-                ilGen.Emit(OpCodes.Ldarg_0);
-                ilGen.Emit(OpCodes.Ldarg_1);
-                ilGen.Emit(OpCodes.Stfld, meta);
-                ilGen.Emit(OpCodes.Ret);
+                typeBuilder.CreateProperty(
+                    prop.Name, prop.PropertyType,
+                    prop.CanRead, prop.CanWrite);
             }
 
             /* black magic */
@@ -309,15 +271,9 @@ namespace CsRestClient
 
                     var paramTypes =
                         method.GetParameters().Select(m => m.ParameterType).ToArray();
-                    methodBuilder = typeBuilder.DefineMethod(
+                    methodBuilder = typeBuilder.CreateMethod(
                         method.Name,
-                        MethodAttributes.Public |
-                        MethodAttributes.Virtual |
-                        MethodAttributes.NewSlot |
-                        MethodAttributes.HideBySig |
-                        MethodAttributes.Final,
-                        method.ReturnType,
-                        paramTypes);
+                        method.ReturnType, paramTypes);
                     var ilGen = methodBuilder.GetILGenerator();
 
                     int argc = 0;
