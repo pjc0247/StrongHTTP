@@ -101,10 +101,10 @@ namespace CsRestClient
 
             var assemblyBuilder =
                 AppDomain.CurrentDomain.DefineDynamicAssembly(
-                    new AssemblyName(implName),
+                    new AssemblyName("CsRestClient_" + implName),
                     AssemblyBuilderAccess.Run);
             var moduleBuilder =
-                assemblyBuilder.DefineDynamicModule("Module");
+                assemblyBuilder.DefineDynamicModule("CsRestClientModule");
             var typeBuilder = moduleBuilder.DefineType(
                 implName,
                 TypeAttributes.Public |

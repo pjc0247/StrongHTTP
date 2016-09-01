@@ -10,6 +10,11 @@ namespace CsRestClient
 {
     using CsRestClient.Attributes.Request;
 
+    /// <summary>
+    /// 메소드 이름, 또는 Attribute를 통해 메소드 추론을 수행하는 클래스
+    /// </summary>
+    /// <see cref="AutoHttpMethod"/>
+    /// <see cref="Method"/>
     internal static class HttpMethodDeduction
     {
         internal static Dictionary<string, HttpMethod> deductionTable { get; } =

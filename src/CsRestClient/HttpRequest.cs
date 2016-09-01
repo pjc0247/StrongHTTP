@@ -68,7 +68,6 @@ namespace CsRestClient
         {
             var req = (HttpWebRequest)HttpWebRequest.Create(uri);
 
-            Console.WriteLine(uri);
             foreach (var header in headers)
             {
                 if (string.Compare("User-Agent", header.Key, true) == 0)
@@ -125,6 +124,12 @@ namespace CsRestClient
             return parameterData;
         }
 
+        /// <summary>
+        /// 프로퍼티 바인딩을 수행한다.
+        /// (`:property_name` 처럼 생긴 값)
+        /// </summary>
+        /// <param name="input">Resource 경로</param>
+        /// <returns></returns>
         private string BindColonValues(string input)
         {
             var sb = new StringBuilder(input);

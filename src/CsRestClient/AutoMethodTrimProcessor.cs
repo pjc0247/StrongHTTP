@@ -9,6 +9,11 @@ namespace CsRestClient
     using Attributes;
     using Attributes.Request;
 
+    /// <summary>
+    /// AutoHttpMethod가 붙어있는 메소드 이름을 정리한다.
+    /// GetProfile -> profile
+    /// </summary>
+    /// <see cref="AutoHttpMethod"/>
     [ProcessorOrder(-1000)]
     public class AutoMethodTrimProcessor : INameProcessor
     {
