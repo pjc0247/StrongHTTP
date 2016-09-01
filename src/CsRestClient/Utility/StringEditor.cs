@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+// StringEditor.cs
+// https://github.com/pjc0247/StringEditor.cs
 namespace CsRestClient.Utility
 {
     class StringEditCommand
