@@ -28,7 +28,7 @@ foreach(var result in response.results) {
 
 ToDo
 ----
-* `await` support
+* `await` support __[DONE]__
 ```c#
 var ret = await math.Sum(5, 5);
 ```
