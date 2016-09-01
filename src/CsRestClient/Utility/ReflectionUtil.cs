@@ -28,5 +28,21 @@ namespace CsRestClient.Utility
                 return true;
             return false;
         }
+
+        public static bool InheritsFrom(this Type type, Type baseType)
+        {
+            var currentType = type;
+            while (currentType != null)
+            {
+                if (currentType.GetInterface(baseType.Name) != null)
+                {
+                    return true;
+                }
+
+                currentType = currentType.BaseType;
+            }
+
+            return false;
+        }
     }
 }
