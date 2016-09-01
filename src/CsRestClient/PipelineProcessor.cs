@@ -11,8 +11,19 @@ namespace CsRestClient
     using Attributes;
     using Utility;
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="INameProcessor"/>
+    /// <seealso cref="IParameterProcessor"/>
     internal static class PipelineProcessor
     {
+        /// <summary>
+        /// 요청에 적용되어야 하는 파이프라인 프로세서 목록을 가져온다.
+        /// </summary>
+        /// <typeparam name="T">프로세서 타입</typeparam>
+        /// <param name="request">조회할 HttpRequest</param>
+        /// <returns>프로세서 목록</returns>
         private static IEnumerable<T> GetProcessors<T>(this HttpRequest request)
         {
             return Assembly.GetEntryAssembly().GetTypes()
@@ -29,6 +40,7 @@ namespace CsRestClient
                 .OrderBy(m => m.GetCustomAttribute<ProcessorOrder>()?.order ?? 0)
                 .Select(m => (T)Activator.CreateInstance(m));
         }
+
         public static void ExecuteParameterProcessors(this HttpRequest request)
         {
             foreach (var processor in request.GetProcessors<IParameterProcessor>())
