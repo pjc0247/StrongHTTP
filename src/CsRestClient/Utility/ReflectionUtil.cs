@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CsRestClient.Utility
 {
-    public static class ReflectionUtil
+    static class ReflectionUtil
     {
         /// <summary>
         /// 내부 타입을 반환한다.
