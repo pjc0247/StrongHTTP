@@ -45,6 +45,7 @@ namespace CsRestClient
         }
 
         /*  TODO : IL-EMIT 사용하는 지저분한 코드 전부 오븐으로 교체
+         *  TODO : AsyncOven 생성
             
             https://github.com/pjc0247/Oven
          */
@@ -121,6 +122,98 @@ namespace CsRestClient
 
             return props.Distinct().ToList();
         }
+
+        private static MethodBuilder CreateSyncMethod<T>(
+            string host, string prefix, MethodInfo method, TypeBuilder typeBuilder,
+            FieldBuilder fieldBuilder)
+        {
+            var paramTypes =
+                method.GetParameters().Select(m => m.ParameterType).ToArray();
+            var returnType = method.ReturnType;
+
+            if (fieldBuilder != null)
+            {
+                returnType = method.ReturnType.GetGenericArguments()[0];
+                paramTypes = new Type[] { };
+            }
+            
+            var methodBuilder = typeBuilder.DefineMethod(
+                prefix + method.Name,
+                MethodAttributes.Public |
+                MethodAttributes.Virtual |
+                MethodAttributes.NewSlot |
+                MethodAttributes.HideBySig |
+                MethodAttributes.Final,
+                returnType,
+                paramTypes);
+            var ilGen = methodBuilder.GetILGenerator();
+
+            /* args... -> object[] */
+            int argc = 0;
+            LocalBuilder args = null;
+            LocalBuilder typeInfo = null;
+            LocalBuilder methodInfo = null;
+            
+            if (fieldBuilder == null)
+            {
+                args = ilGen.DeclareLocal(typeof(object[]));
+                typeInfo = ilGen.DeclareLocal(typeof(Type));
+                methodInfo = ilGen.DeclareLocal(typeof(MethodInfo));
+
+                ilGen.Emit(OpCodes.Ldc_I4, paramTypes.Length);
+                ilGen.Emit(OpCodes.Newarr, typeof(object));
+                ilGen.Emit(OpCodes.Stloc, args);
+
+                foreach (var param in method.GetParameters())
+                {
+                    ilGen.Emit(OpCodes.Ldloc, args);
+                    ilGen.Emit(OpCodes.Ldc_I4, argc);
+                    ilGen.Emit(OpCodes.Ldarg, argc + 1);
+                    if (paramTypes[argc].IsValueType)
+                        ilGen.Emit(OpCodes.Box, paramTypes[argc]);
+                    ilGen.Emit(OpCodes.Stelem_Ref);
+
+                    argc++;
+                }
+            }
+            
+            ilGen.Emit(OpCodes.Ldarg_0);
+            ilGen.Emit(OpCodes.Ldstr, host);
+
+            var getTypeFromHandle =
+                typeof(Type).GetMethod("GetTypeFromHandle");
+            var getMethodFromHandle =
+                typeof(MethodBase).GetMethod(
+                    "GetMethodFromHandle",
+                    new[] { typeof(RuntimeMethodHandle) });
+            ilGen.Emit(OpCodes.Ldtoken, typeof(T));
+            ilGen.Emit(OpCodes.Call, getTypeFromHandle);
+            ilGen.Emit(OpCodes.Castclass, typeof(Type));
+            ilGen.Emit(OpCodes.Ldtoken, method);
+            ilGen.Emit(OpCodes.Call, getMethodFromHandle);
+            ilGen.Emit(OpCodes.Castclass, typeof(MethodInfo));
+
+            if (fieldBuilder == null)
+                ilGen.Emit(OpCodes.Ldloc, args);
+            else
+            {
+                ilGen.Emit(OpCodes.Ldarg_0);
+                ilGen.Emit(OpCodes.Ldfld, fieldBuilder);
+            }
+
+            /* performs proxy call */
+            ilGen.Emit(
+                OpCodes.Call,
+                typeof(RemotePoint).GetMethod(
+                    "RPCCall",
+                    BindingFlags.Static | BindingFlags.Public));
+            /* return value of `RPCCall` will be automatically passed to caller,
+               but it needs to be unboxed to original type before returning. */
+            ilGen.Emit(OpCodes.Castclass, returnType);
+            ilGen.Emit(OpCodes.Ret);
+
+            return methodBuilder;
+        }
         public static T Create<T>(string host)
         {
             var typeBuilder = CreateType(typeof(T));
@@ -168,71 +261,94 @@ namespace CsRestClient
             var methods = typeof(T).GetMethods().Where(m => m.IsSpecialName == false);
             foreach (var method in methods)
             {
-                var paramTypes =
-                    method.GetParameters().Select(m => m.ParameterType).ToArray();
-                var methodBuilder = typeBuilder.DefineMethod(
-                    method.Name,
-                    MethodAttributes.Public |
-                    MethodAttributes.Virtual |
-                    MethodAttributes.NewSlot |
-                    MethodAttributes.HideBySig |
-                    MethodAttributes.Final,
-                    method.ReturnType,
-                    paramTypes);
-                var ilGen = methodBuilder.GetILGenerator();
+                MethodBuilder methodBuilder = null;
 
-                /* args... -> object[] */
-                int argc = 0;
-                var args = ilGen.DeclareLocal(typeof(object[]));
-                var typeInfo = ilGen.DeclareLocal(typeof(Type));
-                var methodInfo = ilGen.DeclareLocal(typeof(MethodInfo));
-
-                ilGen.Emit(OpCodes.Ldc_I4, paramTypes.Length);
-                ilGen.Emit(OpCodes.Newarr, typeof(object));
-                ilGen.Emit(OpCodes.Stloc, args);
-
-                foreach (var param in method.GetParameters())
+                // AsyncMethod interface
+                if (method.ReturnType.IsGenericType &&
+                    method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
                 {
+                    var captureField = typeBuilder.DefineField(
+                        "_" + method.Name, typeof(object[]), FieldAttributes.Private);
+
+                    var syncMethod = CreateSyncMethod<T>(host, "sync_", method, typeBuilder, captureField);
+                    var taskRunMethod = typeof(Task)
+                        .GetMethods()
+                        .Where(x => x.Name == "Run")
+                        .Where(x => x.ReturnType.IsGenericType)
+                        .Where(x => x.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                        .First()
+                        .MakeGenericMethod(method.ReturnType.GetGenericArguments());
+
+                    var paramTypes =
+                        method.GetParameters().Select(m => m.ParameterType).ToArray();
+                    methodBuilder = typeBuilder.DefineMethod(
+                        method.Name,
+                        MethodAttributes.Public |
+                        MethodAttributes.Virtual |
+                        MethodAttributes.NewSlot |
+                        MethodAttributes.HideBySig |
+                        MethodAttributes.Final,
+                        method.ReturnType,
+                        paramTypes);
+                    var ilGen = methodBuilder.GetILGenerator();
+
+                    int argc = 0;
+                    var args = ilGen.DeclareLocal(typeof(object[]));
+                    var typeInfo = ilGen.DeclareLocal(typeof(Type));
+                    var methodInfo = ilGen.DeclareLocal(typeof(MethodInfo));
+                    
+                    ilGen.Emit(OpCodes.Ldc_I4, paramTypes.Length);
+                    ilGen.Emit(OpCodes.Newarr, typeof(object));
+                    ilGen.Emit(OpCodes.Stloc, args);
+                    
+                    foreach (var param in method.GetParameters())
+                    {
+                        ilGen.Emit(OpCodes.Ldloc, args);
+                        ilGen.Emit(OpCodes.Ldc_I4, argc);
+                        ilGen.Emit(OpCodes.Ldarg, argc + 1);
+                        if (paramTypes[argc].IsValueType)
+                            ilGen.Emit(OpCodes.Box, paramTypes[argc]);
+                        ilGen.Emit(OpCodes.Stelem_Ref);
+                    
+                        argc++;
+                    }
+
+                    ilGen.Emit(OpCodes.Ldarg_0);
                     ilGen.Emit(OpCodes.Ldloc, args);
-                    ilGen.Emit(OpCodes.Ldc_I4, argc);
-                    ilGen.Emit(OpCodes.Ldarg, argc + 1);
-                    if (paramTypes[argc].IsValueType)
-                        ilGen.Emit(OpCodes.Box, paramTypes[argc]);
-                    ilGen.Emit(OpCodes.Stelem_Ref);
+                    ilGen.Emit(OpCodes.Stfld, captureField);
 
-                    argc++;
+                    var genericParams = method.GetParameters().Select(x => x.ParameterType).ToList();
+                    genericParams.Add(method.ReturnType.GetGenericArguments()[0]);
+                    Type funcType = typeof(Func<>);
+
+                    var getTypeFromHandle =
+                        typeof(Type).GetMethod("GetTypeFromHandle");
+
+                    ilGen.Emit(OpCodes.Ldtoken, typeof(Func<>).MakeGenericType(
+                        method.ReturnType.GetGenericArguments()[0]));
+                    ilGen.Emit(OpCodes.Call, getTypeFromHandle);
+
+                    ilGen.Emit(OpCodes.Ldarg_0); // typeof(object) for 'CreateDelegate'
+
+                    ilGen.Emit(OpCodes.Ldarg_0);
+                    ilGen.Emit(OpCodes.Call, typeof(object).GetMethod("GetType"));
+                    
+                    ilGen.Emit(OpCodes.Ldstr, "sync_" + method.Name);
+                    ilGen.Emit(OpCodes.Call, typeof(Type).GetMethod("GetMethod", new Type[] { typeof(string) }));
+
+                    ilGen.Emit(OpCodes.Call, typeof(Delegate).GetMethod("CreateDelegate", new Type[] { typeof(Type), typeof(object), typeof(MethodInfo) }));
+                    ilGen.Emit(OpCodes.Castclass, typeof(Func<>).MakeGenericType(
+                        method.ReturnType.GetGenericArguments()[0]));
+
+                    ilGen.Emit(OpCodes.Call, taskRunMethod);
+                    ilGen.Emit(OpCodes.Castclass, method.ReturnType);
+
+                    ilGen.Emit(OpCodes.Ret);
                 }
-
-                ilGen.Emit(OpCodes.Ldarg_0);
-                ilGen.Emit(OpCodes.Ldstr, host);
-
-                var getTypeFromHandle =
-                    typeof(Type).GetMethod("GetTypeFromHandle");
-                var getMethodFromHandle =
-                    typeof(MethodBase).GetMethod(
-                        "GetMethodFromHandle",
-                        new[] { typeof(RuntimeMethodHandle) });
-                ilGen.Emit(OpCodes.Ldtoken, typeof(T));
-                ilGen.Emit(OpCodes.Call, getTypeFromHandle);
-                ilGen.Emit(OpCodes.Castclass, typeof(Type));
-                ilGen.Emit(OpCodes.Ldtoken, method);
-                ilGen.Emit(OpCodes.Call, getMethodFromHandle);
-                ilGen.Emit(OpCodes.Castclass, typeof(MethodInfo));
-
-                ilGen.Emit(OpCodes.Ldloc, args);
-
-                /* performs proxy call */
-                ilGen.Emit(
-                    OpCodes.Call,
-                    typeof(RemotePoint).GetMethod(
-                        "RPCCall",
-                        BindingFlags.Static | BindingFlags.Public));
-                /* return value of `RPCCall` will be automatically passed to caller,
-                   but it needs to be unboxed to original type before returning. */
-                ilGen.Emit(OpCodes.Castclass, method.ReturnType);
-                //ilGen.Emit(OpCodes.Ldobj, method.ReturnType);
-                ilGen.Emit(OpCodes.Ret);
-
+                // SyncMethod interface
+                else
+                    methodBuilder = CreateSyncMethod<T>(host, "", method, typeBuilder, null);
+                
                 typeBuilder.DefineMethodOverride(
                     methodBuilder,
                     typeof(T).GetMethod(
