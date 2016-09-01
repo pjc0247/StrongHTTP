@@ -39,29 +39,10 @@ namespace CsRestClient
             var request = new HttpRequest(obj, host, type, method, args);
             var response = request.GetResponse();
             var returnType = method.ReturnType.Unwrap();
+            object value = null;
 
-            var jsonPathAttr = method.GetCustomAttribute<JsonPathAttribute>();
-            if (jsonPathAttr != null)
-            {
-                JToken jobj = null;
-                if (jsonPathAttr.isArray)
-                    jobj = JArray.Parse(response.body);
-                else
-                    jobj = JObject.Parse(response.body);
-                
-                return jobj.SelectToken(jsonPathAttr.jsonPath).ToObject(returnType);
-            }
-
-            var statusCodeAttr = method.GetCustomAttribute<StatusCodeAttribute>();
-            if (statusCodeAttr != null)
-            {
-                if (returnType == typeof(string))
-                    return response.statusCode.ToString();
-                else if (returnType == typeof(int))
-                    return response.statusCode;
-                else
-                    throw new InvalidCastException("StatusCodeAttribute::ret type != int or string");
-            }
+            if (ProcessResponseAttributes(method, response, out value))
+                return value;
 
             if (returnType == typeof(string))
                 return response.body;
@@ -71,6 +52,42 @@ namespace CsRestClient
             {
                 return JsonConvert.DeserializeObject(response.body, returnType);
             }
+        }
+
+        private static bool ProcessResponseAttributes(
+            MethodInfo method, HttpResponse response,
+            out object value)
+        {
+            var returnType = method.ReturnType.Unwrap();
+
+            var jsonPathAttr = method.GetCustomAttribute<JsonPathAttribute>();
+            if (jsonPathAttr != null)
+            {
+                JToken jobj = null;
+                if (jsonPathAttr.isArray)
+                    jobj = JArray.Parse(response.body);
+                else
+                    jobj = JObject.Parse(response.body);
+
+                value = jobj.SelectToken(jsonPathAttr.jsonPath).ToObject(returnType);
+                return true;
+            }
+
+            var statusCodeAttr = method.GetCustomAttribute<StatusCodeAttribute>();
+            if (statusCodeAttr != null)
+            {
+                if (returnType == typeof(string))
+                    value = response.statusCode.ToString();
+                else if (returnType == typeof(int))
+                    value = response.statusCode;
+                else
+                    throw new InvalidCastException("StatusCodeAttribute::ret type != int or string");
+
+                return true;
+            }
+
+            value = null;
+            return false;
         }
 
         /*  TODO : IL-EMIT 사용하는 지저분한 코드 전부 오븐으로 교체
