@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 
 using CsRestClient;
-using CsRestClient.Attributes;
+using CsRestClient.Attributes.Request;
 
 namespace Sample.Google.Maps
 {

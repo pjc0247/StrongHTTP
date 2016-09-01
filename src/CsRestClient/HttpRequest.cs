@@ -13,7 +13,8 @@ using Newtonsoft.Json.Serialization;
 
 namespace CsRestClient
 {
-    using CsRestClient.Attributes;
+    using Attributes;
+    using Attributes.Request;
 
     public class HttpRequest
     {

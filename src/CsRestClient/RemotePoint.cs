@@ -9,11 +9,16 @@ using System.Net;
 using System.IO;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace CsRestClient
 {
+    using Utility;
+    using Attributes;
+    using Attributes.Response;
+
     public class RemotePoint
     {
         public string host { get; private set; }
@@ -33,14 +38,38 @@ namespace CsRestClient
         {
             var request = new HttpRequest(obj, host, type, method, args);
             var response = request.GetResponse();
+            var returnType = method.ReturnType.Unwrap();
 
-            if (method.ReturnType == typeof(string))
+            var jsonPathAttr = method.GetCustomAttribute<JsonPathAttribute>();
+            if (jsonPathAttr != null)
+            {
+                JToken jobj = null;
+                if (jsonPathAttr.isArray)
+                    jobj = JArray.Parse(response.body);
+                else
+                    jobj = JObject.Parse(response.body);
+                
+                return jobj.SelectToken(jsonPathAttr.jsonPath).ToObject(returnType);
+            }
+
+            var statusCodeAttr = method.GetCustomAttribute<StatusCodeAttribute>();
+            if (statusCodeAttr != null)
+            {
+                if (returnType == typeof(string))
+                    return response.statusCode.ToString();
+                else if (returnType == typeof(int))
+                    return response.statusCode;
+                else
+                    throw new InvalidCastException("StatusCodeAttribute::ret type != int or string");
+            }
+
+            if (returnType == typeof(string))
                 return response.body;
-            else if (method.ReturnType == typeof(HttpResponse))
+            else if (returnType == typeof(HttpResponse))
                 return response;
             else
             {
-                return JsonConvert.DeserializeObject(response.body, method.ReturnType);
+                return JsonConvert.DeserializeObject(response.body, returnType);
             }
         }
 
@@ -264,8 +293,7 @@ namespace CsRestClient
                 MethodBuilder methodBuilder = null;
 
                 // AsyncMethod interface
-                if (method.ReturnType.IsGenericType &&
-                    method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+                if (method.ReturnType.IsTaskWrapped())
                 {
                     var captureField = typeBuilder.DefineField(
                         "_" + method.Name, typeof(object[]), FieldAttributes.Private);

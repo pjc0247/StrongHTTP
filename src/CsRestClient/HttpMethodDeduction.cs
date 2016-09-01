@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace CsRestClient
 {
-    using CsRestClient.Attributes;
+    using CsRestClient.Attributes.Request;
 
     internal static class HttpMethodDeduction
     {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using CsRestClient;
 using CsRestClient.Attributes;
+using CsRestClient.Attributes.Request;
 
 namespace Sample.Example.PipelineProcessor
 {

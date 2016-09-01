@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CsRestClient.Attributes
+namespace CsRestClient.Attributes.Request
 {
     [AttributeUsage(AttributeTargets.Interface)]
     public class Service : Attribute

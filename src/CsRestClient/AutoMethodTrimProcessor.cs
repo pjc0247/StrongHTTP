@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CsRestClient
 {
-    using CsRestClient.Attributes;
+    using Attributes;
+    using Attributes.Request;
 
     [ProcessorOrder(-1000)]
     public class AutoMethodTrimProcessor : INameProcessor

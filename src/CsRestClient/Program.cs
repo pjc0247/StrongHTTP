@@ -13,7 +13,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace CsRestClient
 {
-    using CsRestClient.Attributes;
+    using CsRestClient.Attributes.Request;
 
     [Service("maps/api/geocode")]
     public interface Sample
