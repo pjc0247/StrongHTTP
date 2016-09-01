@@ -68,6 +68,14 @@ namespace CsRestClient
         {
             var req = (HttpWebRequest)HttpWebRequest.Create(uri);
 
+            switch(httpMethod)
+            {
+                case HttpMethod.Get: req.Method = "GET"; break;
+                case HttpMethod.Post: req.Method = "POST"; break;
+                case HttpMethod.Put: req.Method = "PUT"; break;
+                case HttpMethod.Delete: req.Method = "DELETE"; break;
+            }
+
             foreach (var header in headers)
             {
                 if (string.Compare("User-Agent", header.Key, true) == 0)
