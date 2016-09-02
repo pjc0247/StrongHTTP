@@ -13,4 +13,23 @@ namespace CsRestClient
         Put,
         Delete
     }
+
+    internal static class HttpMethodHelper
+    {
+        public static bool IsPayloadAllowed(this HttpMethod httpMethod)
+        {
+            switch (httpMethod)
+            {
+                // FALSE
+                case HttpMethod.Get: return false;
+                case HttpMethod.Delete: return false;
+
+                // TRUE
+                case HttpMethod.Post: return true;
+                case HttpMethod.Put: return true;
+            }
+
+            throw new InvalidOperationException("Unexpected HttpMethod");
+        }
+    }
 }

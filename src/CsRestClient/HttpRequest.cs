@@ -66,6 +66,7 @@ namespace CsRestClient
 
         public HttpResponse GetResponse()
         {
+            Console.WriteLine(uri);
             var req = (HttpWebRequest)HttpWebRequest.Create(uri);
 
             switch(httpMethod)
@@ -87,17 +88,27 @@ namespace CsRestClient
                 else
                     req.Headers.Set(header.Key, header.Value);
             }
-            var resp = (HttpWebResponse)req.GetResponse();
 
-            var reader = new StreamReader(resp.GetResponseStream());
-            var body = reader.ReadToEnd();
+            if (httpMethod.IsPayloadAllowed())
+            {
+                using (var request = req.GetRequestStream())
+                {
 
-            var response = new HttpResponse();
-            response.statusCode = (int)resp.StatusCode;
-            response.statusDescription = resp.StatusDescription;
-            response.body = body;
+                }
+            }
 
-            return response;
+            using (var resp = (HttpWebResponse)req.GetResponse())
+            using (var reader = new StreamReader(resp.GetResponseStream()))
+            {
+                var body = reader.ReadToEnd();
+
+                var response = new HttpResponse();
+                response.statusCode = (int)resp.StatusCode;
+                response.statusDescription = resp.StatusDescription;
+                response.body = body;
+
+                return response;
+            }
         }
 
         private Dictionary<string,string> BuildHeader()
