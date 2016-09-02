@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CsRestClient;
-using CsRestClient.Attributes;
+using CsRestClient.Attributes.Request;
 
 namespace CsRestClientTest
 {
