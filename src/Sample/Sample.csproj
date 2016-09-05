@@ -50,6 +50,7 @@
     <Compile Include="Google\Maps\MapsAPI.cs" />
     <Compile Include="Google\Maps\Processors.cs" />
     <Compile Include="Google\Maps\ReverseGeocodeResult.cs" />
+    <Compile Include="Naver\Tanslate\TargetLanguages.cs" />
     <Compile Include="Naver\Tanslate\TranslateAPI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

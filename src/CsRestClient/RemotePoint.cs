@@ -69,7 +69,11 @@ namespace CsRestClient
                 else
                     jobj = JObject.Parse(response.body);
 
-                value = jobj.SelectToken(jsonPathAttr.jsonPath).ToObject(returnType);
+                var jtoken = jobj.SelectToken(jsonPathAttr.jsonPath);
+                if (jtoken == null)
+                    throw new InvalidOperationException($"JsonPath[{jsonPathAttr.jsonPath}] not avaliable");
+
+                value = jtoken.ToObject(returnType);
                 return true;
             }
 
