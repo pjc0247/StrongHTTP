@@ -110,7 +110,7 @@ namespace CsRestClient
 
                             parameters[param.name] = param.value;
                         }
-                        if (param.type == ParameterType.RequestUri)
+                        else if (param.type == ParameterType.RequestUri)
                         {
                             if (paramType == ParameterType.PostJson)
                                 throw new ArgumentException();
@@ -129,8 +129,6 @@ namespace CsRestClient
                     {
                         var payloadBytes = Encoding.UTF8.GetBytes(requestPayload);
                         request.Write(payloadBytes, 0, payloadBytes.Length);
-
-                        Console.WriteLine(requestPayload);
                     }
                 }
             }
