@@ -22,6 +22,10 @@ namespace CsRestClient
             logOutput = true;
         }
 
+        /// <summary>
+        /// 파이프라인 프로세서를 검색할 어셈블리를 추가한다.
+        /// </summary>
+        /// <param name="reference">추가할 어셈블리</param>
         public static void AddPipelineLookupReference(Assembly reference)
         {
             pipelineLookups.Add(reference);

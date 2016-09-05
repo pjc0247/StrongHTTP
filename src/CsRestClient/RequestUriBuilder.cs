@@ -10,20 +10,20 @@ namespace CsRestClient
     {
         public static string Build(Dictionary<string, object> data)
         {
-            var suffix = "";
+            var sb = new StringBuilder();
             var first = true;
+
             foreach (var param in data)
             {
-                if (first)
-                    suffix = "";
-                else suffix += "&";
+                if (first == false)
+                    sb.Append("&");
 
-                suffix += $"{param.Key}={param.Value}";
+                sb.Append($"{param.Key}={param.Value}");
 
                 first = false;
             }
 
-            return suffix;
+            return sb.ToString();
         }
     }
 }
