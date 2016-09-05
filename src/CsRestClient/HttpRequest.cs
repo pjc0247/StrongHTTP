@@ -41,20 +41,7 @@ namespace CsRestClient
             
             this.parameterData = BuildParameterData();
 
-            var processors = Assembly.GetEntryAssembly().GetTypes()
-                .Where(m => m.GetInterface(nameof(INameProcessor)) != null)
-                .Where(m => m.GetCustomAttribute<ProcessorTarget>()?.targets.Contains(type) ?? true)
-                .OrderBy(m => m.GetCustomAttribute<ProcessorOrder>()?.order ?? 0);
-
-            foreach (var processor in processors)
-            {
-                var p = (INameProcessor)Activator.CreateInstance(processor);
-                foreach(var param in parameterData)
-                {
-                    param.name = p.OnParameter(api, param);
-                }
-            }
-
+            this.ExecuteParameterNameProcessors();
             this.ExecuteParameterProcessors();
 
             this.headers = BuildHeader();

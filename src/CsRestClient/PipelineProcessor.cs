@@ -26,8 +26,11 @@ namespace CsRestClient
         /// <returns>프로세서 목록</returns>
         private static IEnumerable<T> GetProcessors<T>(this HttpRequest request)
         {
-            return Assembly.GetEntryAssembly().GetTypes()
-                .Union(Assembly.GetCallingAssembly().GetTypes())
+            var referenceTypes = Config.pipelineLookups.SelectMany(x => x.GetTypes());
+            var entryTypes = Assembly.GetEntryAssembly().GetTypes();
+
+            return referenceTypes
+                .Union(entryTypes)
                 .Where(m => m.GetInterface(typeof(T).Name) != null)
                 .Where(m => {
                     var attr = m.GetCustomAttribute<ProcessorTarget>();
