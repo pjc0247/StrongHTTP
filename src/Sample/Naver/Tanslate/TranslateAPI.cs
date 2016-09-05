@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using CsRestClient;
+using CsRestClient.Pipeline;
 using CsRestClient.Attributes;
 using CsRestClient.Attributes.Request;
 using CsRestClient.Attributes.Response;

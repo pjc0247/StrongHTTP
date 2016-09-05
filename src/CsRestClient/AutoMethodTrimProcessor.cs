@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CsRestClient
 {
+    using Pipeline;
     using Attributes;
     using Attributes.Request;
 

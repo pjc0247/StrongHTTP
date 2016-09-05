@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using System.Reflection;
 
-namespace CsRestClient
+namespace CsRestClient.Pipeline
 {
     using Attributes;
     using Utility;
