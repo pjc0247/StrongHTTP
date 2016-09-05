@@ -16,7 +16,6 @@ namespace Sample.Example.PipelineProcessor
         아래의 예제는 요청의 각 파라미터들과, 리소스 주소를 모두
         소문자로 바꾸는 방법을 보여줍니다.
      */
-
     public interface NameProcessorTestAPI
     {
         /* /mytestrequest */

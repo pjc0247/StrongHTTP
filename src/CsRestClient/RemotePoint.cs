@@ -22,16 +22,10 @@ namespace CsRestClient
     public class RemotePoint
     {
         public string host { get; private set; }
-        public Config config { get; private set; }
 
-        private RemotePoint(string host, Config config = null)
+        private RemotePoint(string host)
         {
             this.host = host;
-
-            //if (config == null)
-                //this.config = Config.defaults;
-            //else
-              //  this.config = config;
         }
 
         public static object RPCCall(object obj, string host, Type type, MethodInfo method, object[] args)
