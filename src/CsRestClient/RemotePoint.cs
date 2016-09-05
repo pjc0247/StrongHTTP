@@ -92,5 +92,9 @@ namespace CsRestClient
         {
             return RuntimeAssemblyPool.GetType<T>(host);
         }
+        public static Task<T> CreateAsync<T>(string host)
+        {
+            return RuntimeAssemblyPool.GetTypeAsync<T>(host);
+        }
     }
 }
