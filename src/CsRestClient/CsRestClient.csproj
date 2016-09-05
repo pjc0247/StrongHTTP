@@ -70,6 +70,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemotePoint.cs" />
     <Compile Include="RequestUriBuilder.cs" />
+    <Compile Include="RuntimeAssemblyBuilder.cs" />
+    <Compile Include="RuntimeAssemblyPool.cs" />
     <Compile Include="Utility\EmitUtil.cs" />
     <Compile Include="Utility\ReflectionUtil.cs" />
     <Compile Include="Utility\StringEditor.cs" />
