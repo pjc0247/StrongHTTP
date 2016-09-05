@@ -15,7 +15,7 @@ namespace CsRestClient
             foreach (var param in data)
             {
                 if (first)
-                    suffix = "?";
+                    suffix = "";
                 else suffix += "&";
 
                 suffix += $"{param.Key}={param.Value}";

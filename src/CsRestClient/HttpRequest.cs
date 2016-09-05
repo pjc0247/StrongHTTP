@@ -123,14 +123,14 @@ namespace CsRestClient
                     if (paramType == ParameterType.PostJson)
                         requestPayload = JsonConvert.SerializeObject(parameters);
                     else if (paramType == ParameterType.RequestUri)
-                    {
                         requestPayload = RequestUriBuilder.Build(parameters);
-                    }
 
                     if (requestPayload.Length > 0)
                     {
                         var payloadBytes = Encoding.UTF8.GetBytes(requestPayload);
                         request.Write(payloadBytes, 0, payloadBytes.Length);
+
+                        Console.WriteLine(requestPayload);
                     }
                 }
             }
@@ -235,7 +235,7 @@ namespace CsRestClient
 
             var requestUriParams =
                 parameterData.Where(m => m.type == ParameterType.RequestUri);
-            suffix = RequestUriBuilder.Build(
+            suffix = "?" + RequestUriBuilder.Build(
                 requestUriParams.ToDictionary(x => x.name, y => y.value));
 
             return $"{host}/{serviceName}/{apiName}{suffix}";

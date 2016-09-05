@@ -17,8 +17,10 @@ namespace Sample.Naver.Tanslate
         string clientId { get; set; }
         string clientSecret { get; set; }
 
+        [Post]
         [Resource("translate")]
-        Task<string> Translate([PostJson]string source, [PostJson]string target, [PostJson]string text);
+        [JsonPath("message.result.translatedText")]
+        Task<string> Translate([RequestUri]string source, [RequestUri]string target, [RequestUri]string text);
     }
 
     [ProcessorTarget(new Type[] { typeof(TranslateAPIInterface) })]
@@ -26,6 +28,7 @@ namespace Sample.Naver.Tanslate
     {
         public void OnRequest(object api, HttpRequest request)
         {
+            request.headers["Content-Type"] = "application/x-www-form-urlencoded";
             request.headers["X-Naver-Client-Id"] = ((TranslateAPIInterface)api).clientId;
             request.headers["X-Naver-Client-Secret"] = ((TranslateAPIInterface)api).clientSecret;
         }
