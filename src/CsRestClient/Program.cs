@@ -65,6 +65,8 @@ namespace CsRestClient
             this.body = body;
         }
     }
+
+    /*
     public class Config
     {
         public delegate string UriProcessor(Type type, MethodInfo method);
@@ -79,6 +81,7 @@ namespace CsRestClient
             }
         }
     }
+    */
     
 
     public class Program

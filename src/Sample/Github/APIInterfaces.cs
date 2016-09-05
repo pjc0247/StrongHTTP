@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using CsRestClient;
-using CsRestClient.Attributes;
+using CsRestClient.Attributes.Request;
+using CsRestClient.Attributes.Response;
 
 namespace Sample.Github
 {
@@ -15,10 +16,17 @@ namespace Sample.Github
     }
 
     [AutoHttpMethod]
+    [Service("users")]
     public interface UserAPI : APIBase
     {
-        [Resource("gists")]
-        string GetGists();
+        string id { get; set; } 
+
+        [Resource(":id/gists")]
+        string GetGists([Binding]string username);
+
+        [JsonPath("[0].url",isArray = true)]
+        [Resource(":id/gists")]
+        Task<string> GetGistsAsync([Binding]string username);
 
         [Resource("repos")]
         string GetRepos();

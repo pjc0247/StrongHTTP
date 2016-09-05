@@ -66,7 +66,9 @@ namespace CsRestClient
 
         public HttpResponse GetResponse()
         {
-            Console.WriteLine(uri);
+            if (Config.logOutput)
+                Dump();
+
             var req = (HttpWebRequest)HttpWebRequest.Create(uri);
 
             switch(httpMethod)
@@ -210,6 +212,19 @@ namespace CsRestClient
             }
 
             return $"{host}/{serviceName}/{apiName}{suffix}";
+        }
+
+        public void Dump()
+        {
+            Console.WriteLine($"[HttpRequest  {httpMethod} {uri}]");
+            Console.WriteLine($"    - Impl : {type}");
+            Console.WriteLine($"    - Host : {host}");
+            Console.WriteLine($"    - Headers");
+            foreach (var header in headers)
+            {
+            Console.WriteLine($"         - {header.Key} : {header.Value}");
+            }
+            Console.WriteLine();
         }
     }
 }

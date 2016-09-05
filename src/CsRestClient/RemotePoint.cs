@@ -28,10 +28,10 @@ namespace CsRestClient
         {
             this.host = host;
 
-            if (config == null)
-                this.config = Config.defaults;
-            else
-                this.config = config;
+            //if (config == null)
+                //this.config = Config.defaults;
+            //else
+              //  this.config = config;
         }
 
         public static object RPCCall(object obj, string host, Type type, MethodInfo method, object[] args)
