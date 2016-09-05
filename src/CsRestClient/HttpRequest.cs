@@ -15,6 +15,7 @@ namespace CsRestClient
 {
     using Attributes;
     using Attributes.Request;
+    using System.Net.Http;
 
     public class HttpRequest
     {
@@ -95,7 +96,42 @@ namespace CsRestClient
             {
                 using (var request = req.GetRequestStream())
                 {
+                    ParameterType paramType = ParameterType.Ignore;
+                    string requestPayload = "";
+                    var parameters = new Dictionary<string, object>();
 
+                    foreach(var param in parameterData)
+                    {
+                        if (param.type == ParameterType.PostJson)
+                        {
+                            if (paramType == ParameterType.RequestUri)
+                                throw new ArgumentException();
+                            paramType = ParameterType.PostJson;
+
+                            parameters[param.name] = param.value;
+                        }
+                        if (param.type == ParameterType.RequestUri)
+                        {
+                            if (paramType == ParameterType.PostJson)
+                                throw new ArgumentException();
+                            paramType = ParameterType.RequestUri;
+
+                            parameters[param.name] = param.value;
+                        }
+                    }
+
+                    if (paramType == ParameterType.PostJson)
+                        requestPayload = JsonConvert.SerializeObject(parameters);
+                    else if (paramType == ParameterType.RequestUri)
+                    {
+                        requestPayload = RequestUriBuilder.Build(parameters);
+                    }
+
+                    if (requestPayload.Length > 0)
+                    {
+                        var payloadBytes = Encoding.UTF8.GetBytes(requestPayload);
+                        request.Write(payloadBytes, 0, payloadBytes.Length);
+                    }
                 }
             }
 
@@ -199,17 +235,8 @@ namespace CsRestClient
 
             var requestUriParams =
                 parameterData.Where(m => m.type == ParameterType.RequestUri);
-            var first = true;
-            foreach (var param in requestUriParams)
-            {
-                if (first)
-                    suffix = "?";
-                else suffix += "&";
-
-                suffix += $"{param.name}={param.value}";
-
-                first = false;
-            }
+            suffix = RequestUriBuilder.Build(
+                requestUriParams.ToDictionary(x => x.name, y => y.value));
 
             return $"{host}/{serviceName}/{apiName}{suffix}";
         }
