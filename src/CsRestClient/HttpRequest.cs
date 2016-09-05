@@ -135,7 +135,7 @@ namespace CsRestClient
                 }
             }
 
-            using (var resp = (HttpWebResponse)req.GetResponse())
+            using (var resp = (HttpWebResponse)req.GetResponseWithoutException())
             using (var reader = new StreamReader(resp.GetResponseStream()))
             {
                 var body = reader.ReadToEnd();
