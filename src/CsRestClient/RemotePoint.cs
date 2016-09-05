@@ -28,6 +28,15 @@ namespace CsRestClient
             this.host = host;
         }
 
+        /// <summary>
+        /// This is an internal API. Do NOT call this method directly.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="host"></param>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        /// <param name="args"></param>
+        /// <returns>HttpResponse | string | object</returns>
         public static object RPCCall(object obj, string host, Type type, MethodInfo method, object[] args)
         {
             var request = new HttpRequest(obj, host, type, method, args);
