@@ -30,8 +30,6 @@ namespace Sample.Naver.Tanslate
         public void OnRequest(object api, HttpRequest request)
         {
             request.headers["Content-Type"] = "application/x-www-form-urlencoded";
-            request.headers["X-Naver-Client-Id"] = ((TranslateAPIInterface)api).clientId;
-            request.headers["X-Naver-Client-Secret"] = ((TranslateAPIInterface)api).clientSecret;
         }
     }
 
@@ -46,7 +44,8 @@ namespace Sample.Naver.Tanslate
 
             api.commonHeaders = new Dictionary<string, string>()
             {
-                ["a"] = "A"
+                ["X-Naver-Client-Id"] = clientId,
+                ["X-Naver-Client-Secret"] = clientSecret
             };
 
             return api;
