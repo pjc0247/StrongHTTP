@@ -37,8 +37,10 @@ namespace CsRestClient
                     typeCache[key] = new SpinWait();
             }
 
+            // 이미 생성됨, 캐시 사용
             if (value is T)
                 return (T)value;
+            // 값이 곧 만들어짐
             else if (value is SpinWait)
             {
                 var slock = (SpinWait)value;
@@ -55,6 +57,7 @@ namespace CsRestClient
                         return (T)value;
                 }
             }
+            // 첫번째 실행, 만들어야 함
             else if (value == null)
             {
                 var type = RuntimeAssemblyBuilder.CreateImplAsync<T>(host).Result;
