@@ -42,7 +42,7 @@ response.name;
 response.level;
 ```
 
-Task<T> 타입
+Task`T 타입
 ----
 리턴값을 `Task<T>`으로 선언했을 경우 자동으로 비동기로 동작합니다.<br>
 __T__에 대한 제약은 없으며, 위에 설명된 규칙을 그대로 따릅니다.
