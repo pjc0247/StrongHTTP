@@ -45,7 +45,11 @@ namespace CsRestClient
                 while (true)
                 {
                     slock.SpinOnce();
-                    value = typeCache[key];
+
+                    lock (syncObject)
+                    {
+                        value = typeCache[key];
+                    }
 
                     if (value is T)
                         return (T)value;
