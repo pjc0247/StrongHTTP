@@ -206,7 +206,10 @@ namespace CsRestClient
                     BindingFlags.Static | BindingFlags.Public));
             /* return value of `RPCCall` will be automatically passed to caller,
                but it needs to be unboxed to original type before returning. */
-            ilGen.Emit(OpCodes.Castclass, returnType);
+            if (returnType.IsValueType)
+                ilGen.Emit(OpCodes.Unbox_Any, returnType);
+            else
+                ilGen.Emit(OpCodes.Castclass, returnType);
             ilGen.Emit(OpCodes.Ret);
 
             return methodBuilder;
