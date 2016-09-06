@@ -4,7 +4,11 @@ CsRestClient
 Make Interface All The REST Requests!
 [![Build Status](https://travis-ci.org/pjc0247/CsRestClient.svg?branch=master)](https://travis-ci.org/pjc0247/CsRestClient)
 
-Usage with GoogleMaps API
+Usage with NaverTranslate API
+----
+https://github.com/pjc0247/NaverTranslator
+
+Usage with GoogleMaps API [지울거]
 ----
 [Full Sourcecode](https://github.com/pjc0247/CsRestClient/tree/master/src/Sample/Google/Maps)<br>
 [API Response](https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&)<br>
