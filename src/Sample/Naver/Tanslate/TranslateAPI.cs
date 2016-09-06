@@ -13,7 +13,7 @@ using CsRestClient.Attributes.Response;
 namespace Sample.Naver.Tanslate
 {
     [Service("v1/language")]
-    public interface TranslateAPIInterface
+    public interface TranslateAPIInterface : WithCommonHeader
     {
         string clientId { get; set; }
         string clientSecret { get; set; }
@@ -43,6 +43,11 @@ namespace Sample.Naver.Tanslate
 
             api.clientId = clientId;
             api.clientSecret = clientSecret;
+
+            api.commonHeaders = new Dictionary<string, string>()
+            {
+                ["a"] = "A"
+            };
 
             return api;
         }

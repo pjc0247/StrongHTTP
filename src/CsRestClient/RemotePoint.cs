@@ -70,7 +70,7 @@ namespace CsRestClient
                 if (jsonPathAttr.isArray)
                     jobj = JArray.Parse(response.body);
                 else
-                    jobj = JObject.Parse(response.body);
+                    jobj = JObject.Parse(response.body); 
 
                 var jtoken = jobj.SelectToken(jsonPathAttr.jsonPath);
                 if (jtoken == null)
@@ -106,7 +106,7 @@ namespace CsRestClient
         public static async Task<T> CreateAsync<T>(string host)
         {
             var type = await RuntimeAssemblyPool.GetTypeAsync<T>(host);
-
+                
             return (T)Activator.CreateInstance(type);
         }
     }

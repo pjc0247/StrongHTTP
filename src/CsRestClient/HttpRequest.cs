@@ -137,9 +137,16 @@ namespace CsRestClient
 
         private Dictionary<string,string> BuildHeader()
         {
-            var headers = new Dictionary<string, string>();
+            Dictionary<string, string> headers = null;
             var headerParams =
                 parameterData.Where(m => m.type == ParameterType.Header);
+            var commonHeaders =
+                api.GetType().GetProperty(nameof(WithCommonHeader.commonHeaders));
+
+            if (commonHeaders != null)
+                headers = (Dictionary<string, string>)commonHeaders.GetValue(api);
+            else
+                headers = new Dictionary<string, string>();
 
             foreach(var param in headerParams)
             {

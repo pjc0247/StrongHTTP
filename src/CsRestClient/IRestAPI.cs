@@ -9,4 +9,9 @@ namespace CsRestClient
     public interface IRestAPI
     {
     }
+
+    public interface WithCommonHeader
+    {
+        Dictionary<string, string> commonHeaders { get; set; } 
+    }
 }

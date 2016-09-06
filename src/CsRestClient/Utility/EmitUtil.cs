@@ -35,6 +35,10 @@ namespace CsRestClient.Utility
         {
             var meta = typeBuilder.DefineField(
                     "_" + name, type, FieldAttributes.Private);
+            var propertyBuilder = typeBuilder.DefineProperty(
+                name,
+                PropertyAttributes.HasDefault,
+                type, new Type[] { type });
 
             if (getter)
             {
@@ -53,6 +57,8 @@ namespace CsRestClient.Utility
                 ilGen.Emit(OpCodes.Ldarg_0);
                 ilGen.Emit(OpCodes.Ldfld, meta);
                 ilGen.Emit(OpCodes.Ret);
+
+                propertyBuilder.SetGetMethod(methodBuilder);
             }
             if (setter)
             {
@@ -72,6 +78,8 @@ namespace CsRestClient.Utility
                 ilGen.Emit(OpCodes.Ldarg_1);
                 ilGen.Emit(OpCodes.Stfld, meta);
                 ilGen.Emit(OpCodes.Ret);
+
+                propertyBuilder.SetSetMethod(methodBuilder);
             }
 
             return typeBuilder;
