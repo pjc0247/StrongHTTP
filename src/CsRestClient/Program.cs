@@ -82,7 +82,6 @@ namespace CsRestClient
         }
     }
     */
-    
 
     public class Program
     {

@@ -24,7 +24,7 @@ namespace CsRestClient
         {
             return $"{typeof(T).FullName}+{host}";
         }
-        public static T GetType<T>(string host)
+        public static Type GetType<T>(string host)
         {
             var key = GetKey<T>(host);
             object value = null;
@@ -38,8 +38,8 @@ namespace CsRestClient
             }
 
             // 이미 생성됨, 캐시 사용
-            if (value is T)
-                return (T)value;
+            if (value is Type)
+                return (Type)value;
             // 값이 곧 만들어짐
             else if (value is SpinWait)
             {
@@ -53,8 +53,8 @@ namespace CsRestClient
                         value = typeCache[key];
                     }
 
-                    if (value is T)
-                        return (T)value;
+                    if (value is Type)
+                        return (Type)value;
                 }
             }
             // 첫번째 실행, 만들어야 함
@@ -75,7 +75,7 @@ namespace CsRestClient
             }
         }
 
-        public static Task<T> GetTypeAsync<T>(string host)
+        public static Task<Type> GetTypeAsync<T>(string host)
         {
             // FAST-SUCCESS
             var key = GetKey<T>(host);
@@ -85,8 +85,8 @@ namespace CsRestClient
                 {
                     var value = typeCache[key];
 
-                    if (value is T)
-                        return Task.FromResult((T)typeCache[key]);
+                    if (value is Type)
+                        return Task.FromResult((Type)typeCache[key]);
                 }
             }
 

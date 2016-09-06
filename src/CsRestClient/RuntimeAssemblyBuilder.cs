@@ -51,7 +51,7 @@ namespace CsRestClient
             return asyncTask;
         }
 
-        public static Task<T> CreateImplAsync<T>(string host)
+        public static Task<Type> CreateImplAsync<T>(string host)
         {
             return Enqueue(() =>
             {
@@ -211,7 +211,7 @@ namespace CsRestClient
 
             return methodBuilder;
         }
-        private static T Create<T>(string host)
+        private static Type Create<T>(string host)
         {
             var typeBuilder = CreateType(typeof(T));
 
@@ -314,10 +314,7 @@ namespace CsRestClient
                         method.GetParameters().Select(m => m.ParameterType).ToArray()));
             }
 
-            Type type = typeBuilder.CreateType();
-            object obj = Activator.CreateInstance(type);
-
-            return (T)obj;
+            return typeBuilder.CreateType();
         }
     }
 }

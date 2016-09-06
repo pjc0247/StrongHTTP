@@ -99,11 +99,15 @@ namespace CsRestClient
 
         public static T Create<T>(string host)
         {
-            return RuntimeAssemblyPool.GetType<T>(host);
+            var type = RuntimeAssemblyPool.GetType<T>(host);
+
+            return (T)Activator.CreateInstance(type);
         }
-        public static Task<T> CreateAsync<T>(string host)
+        public static async Task<T> CreateAsync<T>(string host)
         {
-            return RuntimeAssemblyPool.GetTypeAsync<T>(host);
+            var type = await RuntimeAssemblyPool.GetTypeAsync<T>(host);
+
+            return (T)Activator.CreateInstance(type);
         }
     }
 }
