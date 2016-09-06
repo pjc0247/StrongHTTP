@@ -109,9 +109,15 @@ namespace CsRestClient
                     }
 
                     if (paramType == ParameterType.PostJson)
+                    {
                         requestPayload = JsonConvert.SerializeObject(parameters);
+                        req.ContentType = req.ContentType ?? "application/json";
+                    }
                     else if (paramType == ParameterType.RequestUri)
+                    {
                         requestPayload = RequestUriBuilder.Build(parameters);
+                        req.ContentType = req.ContentType ?? "application/x-www-form-urlencoded";
+                    }
 
                     if (requestPayload.Length > 0)
                     {
@@ -120,7 +126,7 @@ namespace CsRestClient
                     }
                 }
             }
-
+            
             using (var resp = (HttpWebResponse)req.GetResponseWithoutException())
             using (var reader = new StreamReader(resp.GetResponseStream()))
             {

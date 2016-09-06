@@ -21,15 +21,6 @@ namespace Sample.Naver.Tanslate
         Task<string> Translate([RequestUri]string source, [RequestUri]string target, [RequestUri]string text);
     }
 
-    [ProcessorTarget(new Type[] { typeof(TranslateAPIInterface) })]
-    public class ClientAuthProcessor : IRequestProcessor
-    {
-        public void OnRequest(object api, HttpRequest request)
-        {
-            request.headers["Content-Type"] = "application/x-www-form-urlencoded";
-        }
-    }
-
     public class TranslateAPI
     {
         public static TranslateAPIInterface Create(string clientId, string clientSecret)
