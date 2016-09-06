@@ -15,9 +15,6 @@ namespace Sample.Naver.Tanslate
     [Service("v1/language")]
     public interface TranslateAPIInterface : WithCommonHeader
     {
-        string clientId { get; set; }
-        string clientSecret { get; set; }
-
         [Post]
         [Resource("translate")]
         [JsonPath("message.result.translatedText")]
@@ -38,9 +35,6 @@ namespace Sample.Naver.Tanslate
         public static TranslateAPIInterface Create(string clientId, string clientSecret)
         {
             var api = RemotePoint.Create<TranslateAPIInterface>("https://openapi.naver.com");
-
-            api.clientId = clientId;
-            api.clientSecret = clientSecret;
 
             api.commonHeaders = new Dictionary<string, string>()
             {

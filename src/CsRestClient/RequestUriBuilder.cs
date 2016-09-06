@@ -18,7 +18,7 @@ namespace CsRestClient
                 if (first == false)
                     sb.Append("&");
 
-                sb.Append($"{param.Key}={param.Value}");
+                sb.Append($"{param.Key}={Uri.EscapeUriString(param.Value.ToString())}");
 
                 first = false;
             }
