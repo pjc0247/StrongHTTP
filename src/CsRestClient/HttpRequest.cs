@@ -230,7 +230,7 @@ namespace CsRestClient
 
                     sb.Replace(
                         $":{match.Groups[1].Value}",
-                        value);
+                        Uri.EscapeUriString(value));
                 }
             }
             
@@ -242,12 +242,14 @@ namespace CsRestClient
             var apiName = method.GetCustomAttribute<Resource>()?.name ?? method.Name;
             var suffix = "";
 
-            apiName = Uri.EscapeUriString(BindColonValues(apiName));
+            apiName = BindColonValues(apiName);
             apiName = 
-                Uri.EscapeUriString(
-                    string.Format(
-                        apiName,
-                        parameterData.Where(m => m.type == ParameterType.Binding).Select(m => m.value).ToArray()));
+                string.Format(
+                    apiName,
+                    parameterData
+                        .Where(m => m.type == ParameterType.Binding)
+                        .Select(m => Uri.EscapeUriString(m.value.ToString()))
+                        .ToArray());
 
             this.ExecuteResourceNameProcessors(ref apiName);
 
@@ -262,8 +264,11 @@ namespace CsRestClient
 
             var requestUriParams =
                 parameterData.Where(m => m.type == ParameterType.RequestUri);
-            suffix = "?" + RequestUriBuilder.Build(
-                requestUriParams.ToDictionary(x => x.name, y => y.value));
+            if (requestUriParams.Count() != 0)
+            {
+                suffix = "?" + RequestUriBuilder.Build(
+                    requestUriParams.ToDictionary(x => x.name, y => y.value));
+            }
 
             return $"{host}/{serviceName}/{apiName}{suffix}";
         }
