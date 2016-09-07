@@ -58,15 +58,75 @@ namespace CsRestClient
             if (Config.logOutput)
                 Dump();
 
-            var req = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var httpMethodString = "GET";
+            byte[] payload = null;
 
             switch(httpMethod)
             {
-                case HttpMethod.Get: req.Method = "GET"; break;
-                case HttpMethod.Post: req.Method = "POST"; break;
-                case HttpMethod.Put: req.Method = "PUT"; break;
-                case HttpMethod.Delete: req.Method = "DELETE"; break;
+                case HttpMethod.Get: httpMethodString = "GET"; break;
+                case HttpMethod.Post: httpMethodString = "POST"; break;
+                case HttpMethod.Put: httpMethodString = "PUT"; break;
+                case HttpMethod.Delete: httpMethodString = "DELETE"; break;
             }
+
+            if (httpMethod.IsPayloadAllowed())
+            {
+                ParameterType paramType = ParameterType.Ignore;
+                string requestPayload = "";
+                var parameters = new Dictionary<string, object>();
+
+                foreach (var param in parameterData)
+                {
+                    if (param.type == ParameterType.PostJson)
+                    {
+                        if (paramType == ParameterType.RequestUri)
+                            throw new ArgumentException();
+                        paramType = ParameterType.PostJson;
+
+                        parameters[param.name] = param.value;
+                    }
+                    else if (param.type == ParameterType.RequestUri)
+                    {
+                        if (paramType == ParameterType.PostJson)
+                            throw new ArgumentException();
+                        paramType = ParameterType.RequestUri;
+
+                        parameters[param.name] = param.value;
+                    }
+                }
+
+                if (paramType == ParameterType.PostJson)
+                {
+                    requestPayload = JsonConvert.SerializeObject(parameters);
+
+                    if (headers.ContainsKey("Content-Type") == false)
+                        headers["Content-Type"] = "application/json";
+                }
+                else if (paramType == ParameterType.RequestUri)
+                {
+                    requestPayload = RequestUriBuilder.Build(parameters);
+
+                    if (headers.ContainsKey("Content-Type") == false)
+                        headers["Content-Type"] = "application/x-www-form-urlencoded";
+                }
+
+                if (requestPayload.Length > 0)
+                {
+                    payload = Encoding.UTF8.GetBytes(requestPayload);
+                }
+            }
+
+            return PerformRequest(uri, httpMethodString, headers, payload);
+        }
+
+        private HttpResponse PerformRequest(
+            string uri, string httpMethod,
+            Dictionary<string, string> headers,
+            byte[] payload)
+        {
+            var req = (HttpWebRequest)HttpWebRequest.Create(uri);
+
+            req.Method = httpMethod;
 
             foreach (var header in headers)
             {
@@ -80,53 +140,14 @@ namespace CsRestClient
                     req.Headers.Set(header.Key, header.Value);
             }
 
-            if (httpMethod.IsPayloadAllowed())
+            if (payload != null && payload.Length > 0)
             {
                 using (var request = req.GetRequestStream())
                 {
-                    ParameterType paramType = ParameterType.Ignore;
-                    string requestPayload = "";
-                    var parameters = new Dictionary<string, object>();
-
-                    foreach(var param in parameterData)
-                    {
-                        if (param.type == ParameterType.PostJson)
-                        {
-                            if (paramType == ParameterType.RequestUri)
-                                throw new ArgumentException();
-                            paramType = ParameterType.PostJson;
-
-                            parameters[param.name] = param.value;
-                        }
-                        else if (param.type == ParameterType.RequestUri)
-                        {
-                            if (paramType == ParameterType.PostJson)
-                                throw new ArgumentException();
-                            paramType = ParameterType.RequestUri;
-
-                            parameters[param.name] = param.value;
-                        }
-                    }
-
-                    if (paramType == ParameterType.PostJson)
-                    {
-                        requestPayload = JsonConvert.SerializeObject(parameters);
-                        req.ContentType = req.ContentType ?? "application/json";
-                    }
-                    else if (paramType == ParameterType.RequestUri)
-                    {
-                        requestPayload = RequestUriBuilder.Build(parameters);
-                        req.ContentType = req.ContentType ?? "application/x-www-form-urlencoded";
-                    }
-
-                    if (requestPayload.Length > 0)
-                    {
-                        var payloadBytes = Encoding.UTF8.GetBytes(requestPayload);
-                        request.Write(payloadBytes, 0, payloadBytes.Length);
-                    }
+                    request.Write(payload, 0, payload.Length);
                 }
             }
-            
+
             using (var resp = (HttpWebResponse)req.GetResponseWithoutException())
             using (var reader = new StreamReader(resp.GetResponseStream()))
             {
