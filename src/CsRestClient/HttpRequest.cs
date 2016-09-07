@@ -124,7 +124,7 @@ namespace CsRestClient
             Dictionary<string, string> headers,
             byte[] payload)
         {
-            var req = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var req = WebRequest.CreateHttp(uri);
 
             req.Method = httpMethod;
 
