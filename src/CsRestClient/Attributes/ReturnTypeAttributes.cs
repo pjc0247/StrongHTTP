@@ -14,6 +14,11 @@ namespace CsRestClient.Attributes.Response
         {
             this.expectedStatusCode = null;
         }
+
+        /// <summary>
+        /// Not Implemented,
+        /// </summary>
+        /// <param name="expectedStatusCode"></param>
         public StatusCodeAttribute(int expectedStatusCode)
         {
             this.expectedStatusCode = expectedStatusCode;
