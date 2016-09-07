@@ -162,6 +162,13 @@ namespace CsRestClient
             }
         }
 
+        /// <summary>
+        /// 요청에 포함되어야하는 헤더값들을 가져온다.
+        ///   * ParameterType.Header 로 지정된 파라미터
+        ///   * CommonHeader 로 지정된 값
+        /// </summary>
+        /// <returns>헤더 목록</returns>
+        /// <see cref="WithCommonHeader"/>
         private Dictionary<string,string> BuildHeader()
         {
             Dictionary<string, string> headers = null;
@@ -263,15 +270,18 @@ namespace CsRestClient
 
         public void Dump()
         {
-            Console.WriteLine($"[HttpRequest  {httpMethod} {uri}]");
-            Console.WriteLine($"    - Impl : {type}");
-            Console.WriteLine($"    - Host : {host}");
-            Console.WriteLine($"    - Headers");
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"[HttpRequest  {httpMethod} {uri}]\r\n");
+            sb.Append($"    - Impl : {type}\r\n");
+            sb.Append($"    - Host : {host}\r\n");
+            sb.Append($"    - Headers");
             foreach (var header in headers)
             {
-            Console.WriteLine($"         - {header.Key} : {header.Value}");
+                sb.Append($"         - {header.Key} : {header.Value}\r\n");
             }
-            Console.WriteLine();
+
+            Console.WriteLine(sb.ToString());
         }
     }
 }
