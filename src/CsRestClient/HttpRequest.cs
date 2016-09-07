@@ -140,14 +140,14 @@ namespace CsRestClient
                     req.Headers.Set(header.Key, header.Value);
             }
 
-            if (payload != null && payload.Length > 0)
+            if (payload?.Length > 0)
             {
                 using (var request = req.GetRequestStream())
                 {
                     request.Write(payload, 0, payload.Length);
                 }
             }
-
+            
             using (var resp = (HttpWebResponse)req.GetResponseWithoutException())
             using (var reader = new StreamReader(resp.GetResponseStream()))
             {
