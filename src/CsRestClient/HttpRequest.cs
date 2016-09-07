@@ -99,15 +99,15 @@ namespace CsRestClient
                 {
                     requestPayload = JsonConvert.SerializeObject(parameters);
 
-                    if (headers.ContainsKey("Content-Type") == false)
-                        headers["Content-Type"] = "application/json";
+                    if (headers.ContainsKey(HeaderKey.ContentType) == false)
+                        headers[HeaderKey.ContentType] = "application/json";
                 }
                 else if (paramType == ParameterType.RequestUri)
                 {
                     requestPayload = RequestUriBuilder.Build(parameters);
 
-                    if (headers.ContainsKey("Content-Type") == false)
-                        headers["Content-Type"] = "application/x-www-form-urlencoded";
+                    if (headers.ContainsKey(HeaderKey.ContentType) == false)
+                        headers[HeaderKey.ContentType] = "application/x-www-form-urlencoded";
                 }
 
                 if (requestPayload.Length > 0)
@@ -130,11 +130,11 @@ namespace CsRestClient
 
             foreach (var header in headers)
             {
-                if (string.Compare("User-Agent", header.Key, true) == 0)
+                if (string.Compare(HeaderKey.UserAgent, header.Key, true) == 0)
                     req.UserAgent = header.Value;
-                else if (string.Compare("Content-Type", header.Key, true) == 0)
+                else if (string.Compare(HeaderKey.ContentType, header.Key, true) == 0)
                     req.ContentType = header.Value;
-                else if (string.Compare("Host", header.Key, true) == 0)
+                else if (string.Compare(HeaderKey.Host, header.Key, true) == 0)
                     req.Host = header.Value;
                 else
                     req.Headers.Set(header.Key, header.Value);

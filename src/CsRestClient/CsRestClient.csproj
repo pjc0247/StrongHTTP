@@ -54,6 +54,7 @@
     <Compile Include="Attributes\ReturnTypeAttributes.cs" />
     <Compile Include="AutoMethodTrimProcessor.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="HttpConstants.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="HttpMethodDeduction.cs" />
     <Compile Include="HttpRequest.cs" />
