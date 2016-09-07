@@ -30,12 +30,10 @@ foreach(var result in response.results) {
 }
 ```
 
-ToDo
+Features
 ----
-* `await` support __[DONE]__
-```c#
-var ret = await math.Sum(5, 5);
-```
+* `async` support
+* 없음
 
 Sample Projects
 ----
