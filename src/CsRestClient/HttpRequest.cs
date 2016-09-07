@@ -32,7 +32,7 @@ namespace CsRestClient
 
         public List<ParameterData> parameterData { get; private set; }
 
-        public HttpRequest(object api, string host, Type type, MethodInfo method, object[] args)
+        internal HttpRequest(object api, string host, Type type, MethodInfo method, object[] args)
         {
             this.api = api;
             this.host = host;
