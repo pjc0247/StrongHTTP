@@ -15,8 +15,7 @@ namespace Sample.Naver.Tanslate
     [Service("v1/language")]
     public interface TranslateAPIInterface : WithCommonHeader
     {
-        [Post]
-        [Resource("translate")]
+        [Post, Resource("translate")]
         [JsonPath("message.result.translatedText")]
         Task<string> Translate([RequestUri]string source, [RequestUri]string target, [RequestUri]string text);
     }
