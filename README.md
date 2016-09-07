@@ -34,8 +34,3 @@ Features
 ----
 * `async` support
 * 없음
-
-Sample Projects
-----
-* [Cs.Github.v3](https://github.com/pjc0247/Cs.Github.v3)
-
