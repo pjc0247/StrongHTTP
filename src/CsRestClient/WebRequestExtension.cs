@@ -9,6 +9,13 @@ namespace CsRestClient
 {
     internal static class WebRequestExtensions
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>WebResponse</returns>
+        /// <exception cref="WebException">
+        /// 응답을 받지도 못하고 실패했을 경우
+        /// </exception>
         public static WebResponse GetResponseWithoutException(this WebRequest request)
         {
             if (request == null)

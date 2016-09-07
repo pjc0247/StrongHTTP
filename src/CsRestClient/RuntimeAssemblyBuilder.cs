@@ -100,6 +100,12 @@ namespace CsRestClient
             return typeBuilder;
         }
 
+        /// <summary>
+        /// 주어진 인터페이스와, 해당 인터페이스의 상위 인터페이스를
+        /// 모두 순회하면서 public 프로퍼티 목록을 가져온다.
+        /// </summary>
+        /// <param name="intf">프로퍼티 목록을 가져올 인터페이스 타입</param>
+        /// <returns>프로퍼티 목록</returns>
         private static List<PropertyInfo> GetProperties(Type intf)
         {
             List<PropertyInfo> props = new List<PropertyInfo>();
@@ -126,6 +132,19 @@ namespace CsRestClient
             return props.Distinct().ToList();
         }
 
+        /// <summary>
+        /// 동기 HTTP 콜을 수행하는 메소드를 구현한다.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="host"></param>
+        /// <param name="prefix"></param>
+        /// <param name="method"></param>
+        /// <param name="typeBuilder"></param>
+        /// <param name="fieldBuilder">
+        /// 캡처를 사용하는 경우, 캡처 필드.
+        /// 캡처는 Task`T 리턴 메소드를 구현할 때 사용된다.
+        /// </param>
+        /// <returns>생성된 메소드</returns>
         private static MethodBuilder CreateSyncMethod<T>(
             string host, string prefix, MethodInfo method, TypeBuilder typeBuilder,
             FieldBuilder fieldBuilder)
@@ -234,6 +253,8 @@ namespace CsRestClient
                 // AsyncMethod interface
                 if (method.ReturnType.IsTaskWrapped())
                 {
+                    // 하는 일
+                    // - sync 메소드를 만들고 Task.Run으로 연결한다.
                     var captureField = typeBuilder.DefineField(
                         "_" + method.Name, typeof(object[]), FieldAttributes.Private);
 

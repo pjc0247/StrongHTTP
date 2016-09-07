@@ -57,6 +57,20 @@ namespace CsRestClient
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="response"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <see cref="JsonPathAttribute"/>
+        /// <see cref=" StatusCodeAttribute"/>
+        /// <exception cref="InvalidCastException">
+        /// StatusCodeAttributes가 지정되어 있지만 메소드 반환 타입이 int 또는 string이 아님.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// JsonPathAttribute에 지정된 경로가 존재하지 않음.
+        /// </exception>
         private static bool ProcessResponseAttributes(
             MethodInfo method, HttpResponse response,
             out object value)
