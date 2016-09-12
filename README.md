@@ -30,14 +30,7 @@ foreach(var result in response.results) {
 }
 ```
 
-ToDo
+Features
 ----
-* `await` support __[DONE]__
-```c#
-var ret = await math.Sum(5, 5);
-```
-
-Sample Projects
-----
-* [Cs.Github.v3](https://github.com/pjc0247/Cs.Github.v3)
-
+* `async` support
+* 없음
