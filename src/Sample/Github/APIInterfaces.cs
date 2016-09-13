@@ -24,8 +24,8 @@ namespace Sample.Github
         [Resource(":id/gists")]
         string GetGists([Binding]string username);
 
-        [JsonPath("[0].url",isArray = true)]
         [Resource(":id/gists")]
+        [JsonPath("[0].url", isArray = true)]
         Task<string> GetGistsAsync([Binding]string username);
 
         [Resource("repos")]
