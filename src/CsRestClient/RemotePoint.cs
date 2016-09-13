@@ -44,6 +44,9 @@ namespace CsRestClient
             var returnType = method.ReturnType.Unwrap();
             object value = null;
 
+            if (Config.logOutput)
+                Console.WriteLine(response.body);
+
             if (ProcessResponseAttributes(method, response, out value))
                 return value;
 
