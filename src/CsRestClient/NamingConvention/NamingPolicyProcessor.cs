@@ -22,6 +22,12 @@ namespace CsRestClient.NamingConvention
             return name;
         }
 
+        /// <summary>
+        /// AttributeConvention -> NamingPolicy
+        /// </summary>
+        /// <param name="api"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
         private string ProcessConvention(object api, ParameterData param)
         {
             string output = param.name;
