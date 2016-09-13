@@ -11,11 +11,11 @@ using CsRestClient.Attributes.Response;
 namespace Sample.Facebook
 {
     [Service("v2.7")]
-    public interface DebugTokenInterface
+    public interface DebugTokenInterface : WithNamingPolicy
     {
-        [Resource("debug_token?input_token={0}&access_token={1}")]
+        [Resource("debug_token")]
         [JsonPath("data")]
-        Task<DebugTokenResult> Query([Binding]string tokenToInspect, [Binding]string appToken);
+        Task<DebugTokenResult> Query([RequestUri]string tokenToInspect, [Binding]string appToken);
 
     }
 
@@ -25,7 +25,11 @@ namespace Sample.Facebook
         {
             get
             {
-                return RemotePoint.Create<DebugTokenInterface>("https://graph.facebook.com");
+                var impl = RemotePoint.Create<DebugTokenInterface>("https://graph.facebook.com");
+                impl.namingPolicy = CsRestClient.NamingConvention.NamingPolicy.CreateDefault();
+
+                impl.namingPolicy.requestUri = CsRestClient.NamingConvention.ConventionType.Snake;
+                return impl;
             }
         }
 

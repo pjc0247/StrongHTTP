@@ -14,10 +14,7 @@ namespace CsRestClient.NamingConvention
     {
         public string OnParameter(object api, ParameterData param)
         {
-            if (param.requestAttribute == null)
-                return param.name;
-
-            return ProcessConvention(param);
+            return ProcessConvention(api, param);
         }
 
         public string OnResource(object api, string name)
@@ -25,23 +22,65 @@ namespace CsRestClient.NamingConvention
             return name;
         }
 
-        private string ProcessConvention(ParameterData param)
+        private string ProcessConvention(object api, ParameterData param)
         {
-            var tokens = CaseTokenizer.Tokenize(param.name);
+            string output = param.name;
 
-            switch (param.requestAttribute.convention)
+            if (param.requestAttribute != null &&
+                Conv(param.requestAttribute.convention, param.name, out output))
             {
-                case ConventionType.HttpHeader:
-                    return CaseConv.Join(tokens, CaseType.HttpHeader);
-                case ConventionType.Pascal:
-                    return CaseConv.Join(tokens, CaseType.Pascal);
-                case ConventionType.Snake:
-                    return CaseConv.Join(tokens, CaseType.Snake);
-                case ConventionType.Camel:
-                    return CaseConv.Join(tokens, CaseType.Camel);
+                return output;
+            }
+
+            var policy = (NamingPolicy)api
+                .GetType()
+                .GetProperty("namingPolicy")
+                .GetValue(api);
+            ConventionType convention = ConventionType.None;
+
+            switch (param.type)
+            {
+                case ParameterType.PostJson:
+                    convention = policy.postJson;
+                    break;
+                case ParameterType.Header:
+                    convention = policy.header;
+                    break;
+                case ParameterType.RequestUri:
+                    convention = policy.requestUri;
+                    break;
+            }
+
+            if (Conv(convention, param.name, out output))
+            {
+                return output;
             }
 
             return param.name;
+        }
+
+        private bool Conv(ConventionType convention, string input, out string output)
+        {
+            var tokens = CaseTokenizer.Tokenize(input);
+
+            switch (convention)
+            {
+                case ConventionType.HttpHeader:
+                    output = CaseConv.Join(tokens, CaseType.HttpHeader);
+                    return true;
+                case ConventionType.Pascal:
+                    output = CaseConv.Join(tokens, CaseType.Pascal);
+                    return true;
+                case ConventionType.Snake:
+                    output = CaseConv.Join(tokens, CaseType.Snake);
+                    return true;
+                case ConventionType.Camel:
+                    output = CaseConv.Join(tokens, CaseType.Camel);
+                    return true;
+            }
+
+            output = input;
+            return false;
         }
     }
 }

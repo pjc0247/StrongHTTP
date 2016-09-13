@@ -26,11 +26,13 @@ namespace CsRestClient.Pipeline
         /// <returns>프로세서 목록</returns>
         private static IEnumerable<T> GetProcessors<T>(this HttpRequest request)
         {
+            var selfTypes = typeof(PipelineProcessor).Assembly.GetTypes();
             var referenceTypes = Config.pipelineLookups.SelectMany(x => x.GetTypes());
             var entryTypes = Assembly.GetEntryAssembly().GetTypes();
 
             return referenceTypes
                 .Union(entryTypes)
+                .Union(selfTypes)
                 .Where(m => m.GetInterface(typeof(T).Name) != null)
                 .Where(m => {
                     var attr = m.GetCustomAttribute<ProcessorTarget>();

@@ -17,5 +17,6 @@ namespace CsRestClient
 
     public interface WithNamingPolicy
     {
+        NamingConvention.NamingPolicy namingPolicy { get; set; }
     }
 }
