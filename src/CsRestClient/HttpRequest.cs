@@ -201,6 +201,7 @@ namespace CsRestClient
                 data.position = param.Position;
                 data.value = args[param.Position];
                 data.type = param.GetParamType(method);
+                data.requestAttribute = param.GetCustomAttribute<RequestAttribute>();
 
                 parameterData.Add(data);
             }

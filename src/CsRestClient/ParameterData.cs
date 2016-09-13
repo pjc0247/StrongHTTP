@@ -16,5 +16,10 @@ namespace CsRestClient
         public int position { get; set; }
         public object value { get; set; }
         public ParameterType type { get; set; }
+
+        /// <summary>
+        /// nullable
+        /// </summary>
+        public Attributes.Request.RequestAttribute requestAttribute { get; set; }
     }
 }

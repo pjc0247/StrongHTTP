@@ -59,6 +59,8 @@
     <Compile Include="HttpMethodDeduction.cs" />
     <Compile Include="HttpRequest.cs" />
     <Compile Include="HttpResponse.cs" />
+    <Compile Include="NamingConvention\NamingConvention.cs" />
+    <Compile Include="NamingConvention\NamingPolicyProcessor.cs" />
     <Compile Include="Pipeline\INameProcessor.cs" />
     <Compile Include="Pipeline\IParameterProcessor.cs" />
     <Compile Include="Pipeline\IRequestProcessor.cs" />
@@ -73,7 +75,7 @@
     <Compile Include="RequestUriBuilder.cs" />
     <Compile Include="RuntimeAssemblyBuilder.cs" />
     <Compile Include="RuntimeAssemblyPool.cs" />
-    <Compile Include="Utility\CaseConv.cs" />
+    <Compile Include="NamingConvention\CaseConv.cs" />
     <Compile Include="Utility\EmitUtil.cs" />
     <Compile Include="Utility\JsonPathParser.cs" />
     <Compile Include="Utility\ReflectionUtil.cs" />

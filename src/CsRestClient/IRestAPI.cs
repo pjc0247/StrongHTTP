@@ -14,4 +14,8 @@ namespace CsRestClient
     {
         Dictionary<string, string> commonHeaders { get; set; } 
     }
+
+    public interface WithNamingPolicy
+    {
+    }
 }

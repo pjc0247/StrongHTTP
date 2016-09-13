@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 // https://github.com/pjc0247/caseconv
-namespace CsRestClient.Utility
+namespace CsRestClient.NamingConvention
 {
     public class CaseTokenizer
     {
