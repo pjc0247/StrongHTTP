@@ -72,7 +72,6 @@
     <Compile Include="ParameterType.cs" />
     <Compile Include="ParameterTypeDeduction.cs" />
     <Compile Include="Pipeline\PipelineProcessor.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemotePoint.cs" />
     <Compile Include="RequestUriBuilder.cs" />
