@@ -10,6 +10,10 @@ namespace CsRestClient.Attributes
     {
         public Type[] targets;
 
+        public ProcessorTarget(Type target)
+        {
+            this.targets = new Type[] { target };
+        }
         public ProcessorTarget(Type[] targets)
         {
             this.targets = targets;
