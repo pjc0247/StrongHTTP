@@ -77,6 +77,10 @@ namespace CsRestClient.NamingConvention
                 case ConventionType.Camel:
                     output = CaseConv.Join(tokens, CaseType.Camel);
                     return true;
+
+                case ConventionType.Dontcare:
+                    output = input;
+                    return true;
             }
 
             output = input;

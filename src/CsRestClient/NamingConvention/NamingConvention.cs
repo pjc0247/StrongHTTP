@@ -8,7 +8,11 @@ namespace CsRestClient.NamingConvention
 {
     public enum ConventionType
     {
+        /// <summary>
+        /// for internal use
+        /// </summary>
         None,
+
         Dontcare,
         Camel,
         Pascal,
