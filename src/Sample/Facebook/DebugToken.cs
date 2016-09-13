@@ -15,7 +15,7 @@ namespace Sample.Facebook
     {
         [Resource("debug_token")]
         [JsonPath("data")]
-        Task<DebugTokenResult> Query([RequestUri]string tokenToInspect, [Binding]string appToken);
+        Task<DebugTokenResult> Query([RequestUri]string inputToken, [RequestUri]string accessToken);
 
     }
 

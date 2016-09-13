@@ -25,9 +25,9 @@ namespace CsRestClient.NamingConvention
         public static NamingPolicy CreateDefault()
         {
             NamingPolicy policy = new NamingPolicy();
-            policy.postJson = ConventionType.Dontcare;
-            policy.header = ConventionType.Dontcare;
-            policy.requestUri = ConventionType.Dontcare;
+            policy.postJson = ConventionType.Snake;
+            policy.header = ConventionType.HttpHeader;
+            policy.requestUri = ConventionType.Snake;
             return policy;
         }
     }
