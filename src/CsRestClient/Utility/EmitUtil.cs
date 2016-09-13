@@ -84,7 +84,5 @@ namespace CsRestClient.Utility
 
             return typeBuilder;
         }
-
-
     }
 }
