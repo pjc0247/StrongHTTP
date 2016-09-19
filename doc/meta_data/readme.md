@@ -27,3 +27,14 @@ public static class MapsAPIFactory
     }
 }
 ```
+
+메타 데이터 바인딩
+----
+```cs
+interface GithubUser {
+    string user {get;set;}
+    
+    [Resource(":user/repo")]
+    Repo GetRepo();
+}
+```
