@@ -12,6 +12,7 @@ using CsRestClient.Utility;
 // TODO : 
 //      * RuntimeAssemblyBuilder를 좀더 범용적인 클래스로 변경
 //        (RemotePoint과의 의존성 제거)
+//      * nameof()
 namespace CsRestClient
 {
     internal class RuntimeAssemblyBuilder
@@ -224,7 +225,7 @@ namespace CsRestClient
             ilGen.Emit(
                 OpCodes.Call,
                 typeof(RemotePoint).GetMethod(
-                    "RPCCall",
+                    nameof(RemotePoint.RPCCall),
                     BindingFlags.Static | BindingFlags.Public));
             /* return value of `RPCCall` will be automatically passed to caller,
                but it needs to be unboxed to original type before returning. */
@@ -264,7 +265,7 @@ namespace CsRestClient
                     var syncMethod = CreateSyncMethod<T>(host, "sync_", method, typeBuilder, captureField);
                     var taskRunMethod = typeof(Task)
                         .GetMethods()
-                        .Where(x => x.Name == "Run")
+                        .Where(x => x.Name == nameof(Task.Run))
                         .Where(x => x.ReturnType.IsGenericType)
                         .Where(x => x.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
                         .First()
