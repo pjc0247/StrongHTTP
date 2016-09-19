@@ -1,4 +1,4 @@
-CsRestClient
+StrongHTTP
 ====
 ![man](img/man.png)<br>
 Make Interface All The REST Requests!
