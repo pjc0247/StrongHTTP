@@ -104,6 +104,8 @@ namespace CsRestClient
                     value = response.statusCode.ToString();
                 else if (returnType == typeof(int))
                     value = response.statusCode;
+                else if (returnType == typeof(bool))
+                    value = statusCodeAttr.expectedStatusCode == response.statusCode;
                 else
                     throw new InvalidCastException("StatusCodeAttribute::ret type != int or string");
 
