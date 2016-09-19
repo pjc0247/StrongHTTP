@@ -9,6 +9,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using CsRestClient.Utility;
 
+// TODO : 
+//      * RuntimeAssemblyBuilder를 좀더 범용적인 클래스로 변경
+//        (RemotePoint과의 의존성 제거)
 namespace CsRestClient
 {
     internal class RuntimeAssemblyBuilder
