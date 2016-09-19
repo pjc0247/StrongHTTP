@@ -39,6 +39,9 @@ namespace CsRestClient
             worker.Start();
         }
 
+        /// <summary>
+        /// 어셈블리를 다루는 작업은 모두 이 스레드에서 작업한다.
+        /// </summary>
         private static void Worker()
         {
             while (true)
@@ -48,6 +51,12 @@ namespace CsRestClient
                 task.RunSynchronously();
             }
         }
+        /// <summary>
+        /// 어셈블리 작업 스레드에서 실행할 작업을 올려놓는다.
+        /// </summary>
+        /// <typeparam name="T">리턴 타입</typeparam>
+        /// <param name="task">실행할 작업</param>
+        /// <returns>Task`T</returns>
         private static Task<T> Enqueue<T>(Func<T> task)
         {
             var asyncTask = new Task<T>(task);
