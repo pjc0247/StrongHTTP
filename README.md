@@ -4,6 +4,10 @@ StrongHTTP
 Make Interface All The REST Requests!
 [![Build Status](https://travis-ci.org/pjc0247/CsRestClient.svg?branch=master)](https://travis-ci.org/pjc0247/CsRestClient)
 
+Guide
+----
+![Doc](doc)
+
 Usage with NaverTranslate API
 ----
 https://github.com/pjc0247/NaverTranslator
