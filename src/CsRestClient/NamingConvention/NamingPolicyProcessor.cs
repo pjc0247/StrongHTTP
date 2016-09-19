@@ -40,7 +40,7 @@ namespace CsRestClient.NamingConvention
 
             var policy = (NamingPolicy)api
                 .GetType()
-                .GetProperty("namingPolicy")
+                .GetProperty(nameof(WithNamingPolicy.namingPolicy))
                 .GetValue(api);
             ConventionType convention = ConventionType.None;
 
