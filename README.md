@@ -6,7 +6,7 @@ Make Interface All The REST Requests!
 
 Guide
 ----
-[Doc](doc)
+* [Doc](doc)
 
 Usage with NaverTranslate API
 ----
