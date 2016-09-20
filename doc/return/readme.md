@@ -53,3 +53,18 @@ Task<string> GetNicknameAsync();
 ```cs
 string nickname = await impl.GetNicknameAsync();
 ```
+
+JsonPath 사용하기
+----
+```json
+{
+  "player" : {
+    "name" : "park",
+    "level" : 11
+  }
+}
+```
+```cs
+[JsonPath("player.level")]
+Task<int> GetPlayerLevel();
+```
