@@ -27,3 +27,15 @@ public static class MapsAPIFactory
     }
 }
 ```
+
+메타 데이터 바인딩
+----
+경로를 지정할 때 `:이름`과 같이 작성하면, 런타임에 메타데이터의 값이 바인딩됩니다.
+```cs
+interface GithubUser {
+    string user {get;set;}
+    
+    [Resource(":user/repo")]
+    Repo GetRepo();
+}
+```
