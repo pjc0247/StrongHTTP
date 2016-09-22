@@ -124,7 +124,7 @@ namespace CsRestClient
             List<PropertyInfo> props = new List<PropertyInfo>();
             HashSet<Type> processed = new HashSet<Type>();
             var q = new Queue<Type>();
-
+            
             q.Enqueue(intf);
             while (q.Count > 0)
             {
