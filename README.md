@@ -8,31 +8,44 @@ Guide
 ----
 * [Doc](doc)
 
+
+무엇인가
+----
+
+만약 아래와 같은 스펙을 가지는 REST API가 있다면
+
+```
+GET /mymath/sum
+{
+    "x" : NUMBER,
+    "y" : NUMBER
+}
+```
+```
+{
+    "result" : NUMBER
+}
+```
+
+아래와 같이 쓰면 됩니다.
+```cs
+[Service("/mymath")]
+interface MyRESTClient {
+    [Resource("/sum")]
+    [ResponsePath("result")]
+    int Sum(int x, int y);
+}
+```
+```cs
+var client = RemotePoint.Create<MyRESTClient>("https://api.example.com");
+
+var result = client.Sum(10, 20); // 30
+```
+끝
+
 Usage with NaverTranslate API
 ----
 https://github.com/pjc0247/NaverTranslator
-
-Usage with GoogleMaps API [지울거]
-----
-[Full Sourcecode](https://github.com/pjc0247/CsRestClient/tree/master/src/Sample/Google/Maps)<br>
-[API Response](https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&)<br>
-```c#
-[Service("maps/api/geocode")]
-public interface MapsAPI
-{
-    [Resource("json")]
-    ReverseGeocodeResult ReverseGeocode(
-        [RequestUri]double lat, [RequestUri]double lng);
-}
-```
-```c#
-var api = Google.Maps.MapsAPIFactory.Create();
-var response = api.ReverseGeocode(40.714224,-73.961452);
-
-foreach(var result in response.results) {
-  Console.WriteLine(result.formatted_address);
-}
-```
 
 Features
 ----
