@@ -11,7 +11,7 @@ namespace CsRestClient.NamingConvention
     {
         public static string[] Tokenize(string input)
         {
-            List<string> tokens = new List<string>();
+            var tokens = new List<string>();
             var lastOffset = 0;
 
             for (int i = 1; i < input.Length; i++)
