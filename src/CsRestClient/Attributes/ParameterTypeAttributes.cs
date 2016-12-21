@@ -10,7 +10,7 @@ namespace CsRestClient.Attributes.Request
 
     public class RequestAttribute : Attribute
     {
-        internal ConventionType convention { get; set; }
+        public ConventionType convention { get; protected set; }
     }
 
     [AttributeUsage(AttributeTargets.Parameter)]

@@ -13,7 +13,7 @@ namespace CsRestClient.Attributes.Request
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class Method : Attribute
     {
-        public HttpMethod method { get; set; }
+        public HttpMethod method { get; }
 
         public Method(HttpMethod method)
         {

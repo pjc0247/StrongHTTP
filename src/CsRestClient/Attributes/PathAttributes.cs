@@ -9,7 +9,7 @@ namespace CsRestClient.Attributes.Request
     [AttributeUsage(AttributeTargets.Interface)]
     public class Service : Attribute
     {
-        public string path { get; private set; }
+        public string path { get; }
 
         public Service(string path)
         {
@@ -19,7 +19,7 @@ namespace CsRestClient.Attributes.Request
     [AttributeUsage(AttributeTargets.Method)]
     public class Resource : Attribute
     {
-        public string name { get; private set; }
+        public string name { get; }
 
         public Resource(string name)
         {

@@ -8,7 +8,7 @@ namespace CsRestClient.Attributes.Response
 {
     public class StatusCodeAttribute : Attribute
     {
-        public int? expectedStatusCode { get; set; }
+        public int? expectedStatusCode { get; }
 
         public StatusCodeAttribute()
         {
@@ -29,8 +29,8 @@ namespace CsRestClient.Attributes.Response
     /// </summary>
     public class JsonPathAttribute : Attribute
     {
-        public string jsonPath { get; set; }
-        public bool isArray { get; set; }
+        public string jsonPath { get; }
+        public bool isArray { get; }
 
         /// <summary>
         /// </summary>

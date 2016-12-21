@@ -8,7 +8,7 @@ namespace CsRestClient.Attributes
 {
     public class ProcessorTarget : Attribute
     {
-        public Type[] targets;
+        public Type[] targets { get; }
 
         public ProcessorTarget(Type target)
         {
@@ -22,7 +22,7 @@ namespace CsRestClient.Attributes
 
     public class ProcessorOrder : Attribute
     {
-        public int order = 0;
+        public int order { get; }
 
         public ProcessorOrder(int order)
         {
