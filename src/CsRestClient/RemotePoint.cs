@@ -54,10 +54,12 @@ namespace CsRestClient
                 return response.body;
             else if (returnType == typeof(HttpResponse))
                 return response;
-            else
-            {
+            else if (returnType == typeof(bool))
+                return response.statusCode >= 200 && response.statusCode < 300;
+            else if (returnType.IsValueType == false)
                 return JsonConvert.DeserializeObject(response.body, returnType);
-            }
+            else
+                throw new InvalidOperationException("unexpected return type : " + returnType);
         }
 
         /// <summary>
