@@ -1,7 +1,7 @@
 StrongHTTP
 ====
 ![man](img/man.png)<br>
-Make Interface All The REST Requests!
+Make Interface All the REST Requests!
 [![Build Status](https://travis-ci.org/pjc0247/StrongHTTP.svg?branch=master)](https://travis-ci.org/pjc0247/StrongHTTP)
 
 Guide
@@ -9,13 +9,12 @@ Guide
 * [Doc](doc)
 
 
-무엇인가
+Overview
 ----
-
-만약 아래와 같은 스펙을 가지는 REST API가 있다면
-
+If you want to call REST method which has a specification like below:
 ```
 GET /mymath/sum
+
 {
     "x" : NUMBER,
     "y" : NUMBER
@@ -27,21 +26,26 @@ GET /mymath/sum
 }
 ```
 
-아래와 같이 쓰면 됩니다.
+just make a interface and describe your API.
 ```cs
 [Service("/mymath")]
 interface MyRESTClient {
     [Resource("/sum")]
     [ResponsePath("result")]
     int Sum(int x, int y);
+    
+    // also supports `Async` functions.
+    Task<int> SumAsync(int x, int y);
 }
 ```
+
+...and __StrongHTTP__ will make a proper implementation for you.
 ```cs
 var client = RemotePoint.Create<MyRESTClient>("https://api.example.com");
 
 var result = client.Sum(10, 20); // 30
 ```
-끝
+
 
 Usage with NaverTranslate API
 ----
@@ -49,7 +53,7 @@ https://github.com/pjc0247/NaverTranslator
 
 Features
 ----
-* `async` support
+* supports `async` 
 * 없음
 
 외 많들었나?
