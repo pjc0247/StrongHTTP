@@ -43,7 +43,7 @@ then __StrongHTTP__ will make a proper implementation for you.
 ```cs
 var client = RemotePoint.Create<MyRESTClient>("https://api.example.com");
 
-var result = client.Sum(10, 20); // 30
+var result = await client.SumAsync(10, 20); // 30
 ```
 
 
