@@ -39,7 +39,7 @@ interface MyRESTClient {
 }
 ```
 
-...and __StrongHTTP__ will make a proper implementation for you.
+then __StrongHTTP__ will make a proper implementation for you.
 ```cs
 var client = RemotePoint.Create<MyRESTClient>("https://api.example.com");
 
