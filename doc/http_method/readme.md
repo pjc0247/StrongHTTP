@@ -1,4 +1,4 @@
-요청의 HttpMethod 설정하기
+HTTP METHOD (GET, POST, PUT, DELETE)
 ====
 
 Default
