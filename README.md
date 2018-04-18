@@ -4,7 +4,7 @@ StrongHTTP
 Make Interface All the REST Requests!<br>
 [![Build Status](https://travis-ci.org/pjc0247/StrongHTTP.svg?branch=master)](https://travis-ci.org/pjc0247/StrongHTTP)
 
-* [documentation](doc)
+__[documentation](doc)__
 
 
 Overview
