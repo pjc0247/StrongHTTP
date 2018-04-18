@@ -1,12 +1,10 @@
 StrongHTTP
 ====
 ![man](img/man.png)<br>
-Make Interface All the REST Requests!
+Make Interface All the REST Requests!<br>
 [![Build Status](https://travis-ci.org/pjc0247/StrongHTTP.svg?branch=master)](https://travis-ci.org/pjc0247/StrongHTTP)
 
-Guide
-----
-* [Doc](doc)
+* [documentation](doc)
 
 
 Overview
