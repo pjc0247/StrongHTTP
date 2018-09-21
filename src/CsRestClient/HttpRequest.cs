@@ -30,7 +30,7 @@ namespace CsRestClient
         public string uri { get; private set; }
         public HttpMethod httpMethod { get; private set; }
 
-        public List<ParameterData> parameterData { get; private set; }
+        public ParameterData[] parameterData { get; private set; }
 
         internal HttpRequest(object api, string host, Type type, MethodInfo method, object[] args)
         {
@@ -189,7 +189,7 @@ namespace CsRestClient
 
             return headers;
         }
-        private List<ParameterData> BuildParameterData()
+        private ParameterData[] BuildParameterData()
         {
             var parameterData = new List<ParameterData>();
 
@@ -206,7 +206,7 @@ namespace CsRestClient
                 parameterData.Add(data);
             }
 
-            return parameterData;
+            return parameterData.ToArray();
         }
 
         /// <summary>
