@@ -1,7 +1,7 @@
 language: csharp
 solution: src/CsRestClient/CsRestClient.csproj
 script:
-  - nuget restore src/CsRestClient.sln
+  - nuget restore src/CsRestClient.sln -PackagesDirectory
   - xbuild /p:Configuration=Release /p:TargetFrameworkVersion="v4.5" src/CsRestClient/CsRestClient.csproj
 notifications:
   email: false
